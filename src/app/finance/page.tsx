@@ -9,7 +9,7 @@ import Link from 'next/link'
 import React from 'react'
 import { signOut } from 'next-auth/react'
 
-export default function financePage() {
+export default function FinancePage() {
 
   return(
   <div className="flex min-h-screen w-full flex-col bg-muted/40">
