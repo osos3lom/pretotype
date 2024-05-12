@@ -7,19 +7,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import Sidebar from '@/components/sidebar'
 import Link from 'next/link'
 import React from 'react'
-import { signOut, useSession } from 'next-auth/react'
-import { redirect } from 'next/navigation'
+import { signOut } from 'next-auth/react'
 
 export default function financePage() {
-  const session = useSession({
-    required: true,
-    onUnauthenticated(){
-      redirect('/login');
-    },
-  });
+
   return(
   <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <div className='text-center'>{session?.data?.user?.email}</div>
+      
       <button onClick={()=>signOut()}>تسجيل الخروج</button>      
       <Sidebar/>
     
@@ -248,7 +242,7 @@ export default function financePage() {
   )
 }
 
-financePage.requireAuth = true
+
 
 function ActivityIcon() {
   return (
