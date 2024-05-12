@@ -5,9 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ThemeToggler } from './ThemeToggler';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from './ui/navigation-menu';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
-import { Menu } from "lucide-react";
-import { Button, buttonVariants } from "./ui/button";
+import { Button } from "./ui/button";
 
 interface RouteProps {
   href: string;
@@ -62,7 +60,9 @@ export default function Header() {
               <NavigationMenuItem>
                 <div className='flex'>
                   <Button>
-                    تسجيل الدخول
+                    <Link href="/login">
+                      تسجيل الدخول
+                    </Link>
                   </Button>
                   <div className='ml-2'>
                     <ThemeToggler/>  

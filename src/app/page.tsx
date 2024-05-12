@@ -1,3 +1,4 @@
+import Header from '@/components/Header'
 import { About } from '@/components/landingpage/About'
 import { Cta } from '@/components/landingpage/Cta'
 import { Features } from '@/components/landingpage/Features'
@@ -11,6 +12,7 @@ import { Services } from '@/components/landingpage/Services'
 export default function Home() {
   return (
     <div>
+      <Header/>
       <main>
         <Hero />
         <About/>

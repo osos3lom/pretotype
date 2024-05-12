@@ -1,9 +1,8 @@
-import Header from '@/components/Header'
 import './globals.css'
 import localFont from 'next/font/local'
 const Lemonada = localFont({ src: './../font/Lemonada.woff' })
-import { ThemeProvider } from "@/components/ThemeProvider"
-
+import { ThemeProvider } from "@/components/ThemeProvider";
+import SessionProvider from '@/app/SessionProvider'
 export const metadata = {
   title: 'FursanPreto',
   description: 'Equestrian Future',
@@ -23,9 +22,11 @@ export default function RootLayout({
             defaultTheme="light"
             enableSystem
             disableTransitionOnChange
-          >
-        <Header/>
-      {children}
+            >
+        <SessionProvider>
+          {children}
+        </SessionProvider>
+        
       </ThemeProvider>
       </body>
     </html>
