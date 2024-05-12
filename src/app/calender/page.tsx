@@ -2,10 +2,20 @@ import Sidebar from '@/components/sidebar'
 import React from 'react'
 import Calender from '@/components/calender/index'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { signOut, useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
 
 export default function CalenderPage() {
+  const session = useSession({
+    required: true,
+    onUnauthenticated(){
+      redirect('/login');
+    },
+  });
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
+      <div className='text-center'>{session?.data?.user?.email}</div>
+      <button onClick={()=>signOut()}>تسجيل الخروج</button>      
       <Sidebar/>
       <main className="flex  flex-col gap-3 md:gap-8 md:p-10 sm:mr-3">
         <div className="grid mr-3 gap-2 md:grid-cols-1 lg:grid-cols-1">
@@ -23,7 +33,7 @@ export default function CalenderPage() {
   </div>
   )
 }
-
+CalenderPage.requireAuth = true
 
 
 function LineChartIcon() {

@@ -6,10 +6,20 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import Sidebar from '@/components/sidebar'
 import Link from 'next/link'
 import React from 'react'
+import { signOut, useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 
 export default function financePage() {
-  return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
+  const session = useSession({
+    required: true,
+    onUnauthenticated(){
+      redirect('/login');
+    },
+  });
+  return(
+  <div className="flex min-h-screen w-full flex-col bg-muted/40">
+      <div className='text-center'>{session?.data?.user?.email}</div>
+      <button onClick={()=>signOut()}>تسجيل الخروج</button>      
       <Sidebar/>
     
       <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 sm:mr-12">
@@ -236,6 +246,8 @@ export default function financePage() {
     </div>
   )
 }
+
+financePage.requireAuth = true
 
 function ActivityIcon() {
   return (
