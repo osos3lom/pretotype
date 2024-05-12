@@ -1,11 +1,11 @@
 'use client';
-import { ThemeToggler } from '@/components/ThemeToggler';
 import Sidebar from '@/components/sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { signOut, useSession } from 'next-auth/react';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import React from 'react'
 
@@ -232,7 +232,7 @@ export default function DashboardPage() {
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <Card>
               <div className="relative group">
-                <img
+                <Image
                   alt="Horse Image"
                   className="aspect-[3/2] object-cover rounded-t-lg w-full"
                   height={400}
@@ -280,7 +280,7 @@ export default function DashboardPage() {
             </Card>
             <Card>
               <div className="relative group">
-                <img
+                <Image
                   alt="Horse Image"
                   className="aspect-[3/2] object-cover rounded-t-lg w-full"
                   height={400}

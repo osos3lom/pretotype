@@ -106,7 +106,8 @@ export default function HorsesPage() {
           <div className="grid gap-4 mr-9 md:grid-cols-2 lg:grid-cols-4">
             <Card>
               <div className="relative group">
-                <img
+                <Image
+
                   alt="Horse Image"
                   className="aspect-[3/2] object-cover rounded-t-lg w-full"
                   height={400}
@@ -154,7 +155,7 @@ export default function HorsesPage() {
             </Card>
             <Card>
               <div className="relative group">
-                <img
+                <Image
                   alt="Horse Image"
                   className="aspect-[3/2] object-cover rounded-t-lg w-full"
                   height={400}
@@ -202,7 +203,7 @@ export default function HorsesPage() {
             </Card>
             <Card>
               <div className="relative group">
-                <img
+                <Image
                   alt="Horse Image"
                   className="aspect-[3/2] object-cover rounded-t-lg w-full"
                   height={400}
@@ -250,7 +251,7 @@ export default function HorsesPage() {
             </Card>
             <Card>
               <div className="relative group">
-                <img
+                <Image
                   alt="Horse Image"
                   className="aspect-[3/2] object-cover rounded-t-lg w-full"
                   height={400}
