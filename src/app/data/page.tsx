@@ -1,3 +1,4 @@
+'use client'
 import Sidebar from "@/components/sidebar"
 import { signOut, useSession } from "next-auth/react";
 import { redirect } from "next/navigation";

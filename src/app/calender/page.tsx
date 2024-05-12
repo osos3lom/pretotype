@@ -1,3 +1,4 @@
+'use client'
 import Sidebar from '@/components/sidebar'
 import React from 'react'
 import Calender from '@/components/calender/index'
