@@ -20,7 +20,7 @@ const routeList: RouteProps[] = [
   },  
   {
     href: "#features",
-    label: "التطبيق",
+    label: "الخصائص",
   },
 ];
 
@@ -30,7 +30,7 @@ export default function Header() {
         <header>
           <NavigationMenu className="mx-auto">
             <NavigationMenuList className="container h-14 px-4 w-screen flex justify-between ">
-              <NavigationMenuItem className="font-bold flex">
+              <NavigationMenuItem className="font-bold  hidden sm:flex">
               <Link href="/" className="flex p-2 ml-2 items-center">
                 <div className='w-fit'>
                     <Image
