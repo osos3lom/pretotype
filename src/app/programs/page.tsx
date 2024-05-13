@@ -20,8 +20,35 @@ import { Check } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { cn } from "@/lib/utils"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Checkbox } from "@/components/ui/checkbox"
 
+type notifications = {
+  title: string,
+  description: string,
+};
+
+type programs = {
+    invoice: string,
+    duration: string,
+    paymentStatus: string,
+    totalAmount: string,
+    paymentMethod: string,
+};
+type TrainingTasks = {
+  status: string,
+  duration: string,
+  paymentStatus: string,
+  totalAmount: string,
+  paymentMethod: string,
+  time:string,
+};
+type Nuttasks = {
+  status: string,
+  duration: string,
+  paymentStatus: string,
+  totalAmount: string,
+  paymentMethod: string,
+  time:string,
+};
 
 const notifications = [
   {
@@ -166,11 +193,8 @@ const Nuttasks = [
   },
 ]
  
-type CardProps = React.ComponentProps<typeof Card>
 
- 
-
-export default function ProgramsPage({ className, ...props }: CardProps) {
+export default function ProgramsPage() {
   
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
@@ -225,7 +249,7 @@ export default function ProgramsPage({ className, ...props }: CardProps) {
       </TabsList>
       <TabsContent value="goals">
         <div className="flex gap-4">        
-          <Card className={cn("w-[380px]", className)} {...props}>
+          <Card>
             <CardHeader>
               <CardTitle className="text-right"> تدريب سبلت من أجل سباق التحمل</CardTitle>
               <CardDescription className="text-right">لديك 3 برامج لتحقيق الهدف</CardDescription>
@@ -275,7 +299,7 @@ export default function ProgramsPage({ className, ...props }: CardProps) {
                 </Button>
               </CardFooter>
             </Card>
-              <Card className={cn("w-[380px]", className)} {...props}>
+              <Card>
               <CardHeader>
                 <CardTitle className="text-right">تدريب فزاع لتحقيق مركز في سباق القفز </CardTitle>
                 <CardDescription className="text-right">لديك 3 برامج لتحقيق الهدف</CardDescription>
