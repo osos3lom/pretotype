@@ -7,7 +7,6 @@ import Calender from '@/components/calender/index'
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@/components/ui/table";
 import { signOut, useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
-import LineChart from '../../../components/PerformanceChart'
 export default function HoeseProfilePage() {
     const session = useSession({
         required: true,
