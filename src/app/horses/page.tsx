@@ -9,21 +9,10 @@ import Sidebar from '@/components/sidebar'
 import { File, ListFilter, MoreHorizontal, PlusCircle } from 'lucide-react'
 import Image from 'next/image'
 import React from 'react'
-import { signOut, useSession } from 'next-auth/react'
-import { redirect } from 'next/navigation'
 
 export default function HorsesPage() {
-    const session = useSession({
-        required: true,
-        onUnauthenticated(){
-          redirect('/login');
-        },
-      });
-  
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <div className='text-center'>{session?.data?.user?.email}</div>
-      <button onClick={()=>signOut()}>تسجيل الخروج</button>      
       <Sidebar/>
     
     
@@ -647,9 +636,6 @@ export default function HorsesPage() {
 
   )
 }
-HorsesPage.requireAuth = true
-
-
 function CalendarDaysIcon() {
   return (
     <svg

@@ -4,22 +4,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { redirect } from 'next/navigation';
 import React from 'react'
 
 export default function DashboardPage() {
-  const session = useSession({
-    required: true,
-    onUnauthenticated(){
-      redirect('/login');
-    },
-  });
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <div className='text-center'>{session?.data?.user?.email}</div>
-      <button onClick={()=>signOut()}>تسجيل الخروج</button>      
       <Sidebar/>
       <main className="flex mr-10 min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 sm:mr-12">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -310,9 +300,6 @@ export default function DashboardPage() {
     </div>
   )
 }
-
-DashboardPage.requireAuth = true
-
 
 function CalendarDaysIcon() {
   return (

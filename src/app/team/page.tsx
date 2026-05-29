@@ -8,21 +8,10 @@ import { File, ListFilter, PlusCircle } from 'lucide-react'
 import Sidebar from "@/components/sidebar"
 import Link from 'next/link'
 import React from 'react'
-import { signOut, useSession } from 'next-auth/react'
-import { redirect } from 'next/navigation'
 export default function TeamPage() {
-  
-  const session = useSession({
-    required: true,
-    onUnauthenticated(){
-      redirect('/login');
-    },
-  });
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <div className='text-center'>{session?.data?.user?.email}</div>
-      <button onClick={()=>signOut()}>تسجيل الخروج</button>      
-      <Sidebar/>  
+      <Sidebar/>
       <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10 sm:mr-3">
           <div className="grid mr-9 gap-4 md:grid-cols-2 lg:grid-cols-2">
             <Card>
@@ -220,8 +209,6 @@ export default function TeamPage() {
 
   )
 }
-TeamPage.requireAuth = true
-
 function HomeIcon() {
   return (
     <svg

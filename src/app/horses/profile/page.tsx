@@ -5,22 +5,9 @@ import Sidebar from '@/components/sidebar';
 import Image from "next/image";
 import Calender from '@/components/calender/index'
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@/components/ui/table";
-import { signOut, useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
 export default function HoeseProfilePage() {
-    const session = useSession({
-        required: true,
-        onUnauthenticated(){
-          redirect('/login');
-        },
-      });
-   
-    
-
   return (
     <div className="flex flex-col mr-9">
-        <div className='text-center'>{session?.data?.user?.email}</div>
-      <button onClick={()=>signOut()}>تسجيل الخروج</button>     
         <Sidebar/>
         <div className="flex px-6 gap-3">
         <Card className="w-8/12 dark:bg-muted">
@@ -242,5 +229,3 @@ export default function HoeseProfilePage() {
     </div>
   )
 }
-
-HoeseProfilePage.requireAuth = true
