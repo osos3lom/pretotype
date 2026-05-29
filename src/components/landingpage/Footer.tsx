@@ -1,4 +1,4 @@
-
+import Link from "next/link"
 
 export const Footer = () => {
   return (
@@ -7,13 +7,13 @@ export const Footer = () => {
 
       <section className="container py-20 grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 gap-x-12 gap-y-8">
         <div className="flex justify-center col-span-full xl:col-span-2">
-          <a
+          <Link
             href="/"
             className="font-bold  text-xl flex"
           >
-            
+
             فرسان هب التقنية
-          </a>
+          </Link>
         </div>
 
         <div className="flex flex-col gap-2">

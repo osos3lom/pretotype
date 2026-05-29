@@ -1,10 +1,11 @@
+import type React from "react";
 import { Card, CardDescription, CardHeader, CardTitle } from "../ui/card";
 import { MagnifierIcon, WalletIcon, ChartIcon } from "./Icons";
 
 interface ServiceProps {
   title: string;
   description: string;
-  icon: JSX.Element;
+  icon: React.JSX.Element;
 }
 
 const serviceList: ServiceProps[] = [
