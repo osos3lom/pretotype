@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { getAssetPath } from '@/lib/utils';
 
 interface FeaturePillar {
   id: string;
@@ -40,7 +41,7 @@ const pillars: FeaturePillar[] = [
       'تنبيهات فورية لفرق النظافة والصيانة عبر تطبيق الجوال',
       'عقود إيواء رقمية موحدة لحماية حقوق المربط والمالك'
     ],
-    imageSrc: '/images/stable_facility.jpg',
+    imageSrc: getAssetPath('/images/stable_facility.jpg'),
     imageAlt: 'اسطبلات وبوكسات خيول فاخرة مجهزة بأحدث التقنيات',
     route: '/stables'
   },
@@ -55,7 +56,7 @@ const pillars: FeaturePillar[] = [
       'سجل بيطري موثق يرفع القيمة السوقية للخيل عند البيع أو التشبيه',
       'تنبيهات استباقية لمواعيد حذوة الحافر والفحوصات المخبرية'
     ],
-    imageSrc: '/images/dashboard_mockup.jpg',
+    imageSrc: getAssetPath('/images/dashboard_mockup.jpg'),
     imageAlt: 'واجهة لوحة القيادة الرقمية لإدارة السجلات البيطرية وشجرة النسب',
     route: '/horses'
   },
@@ -70,7 +71,7 @@ const pillars: FeaturePillar[] = [
       'تقييم أداء الفارس وتتبع تقدمه الفني والبدني بالأرقام',
       'إدارة أوقات راحة الخيل ومعدل الجهد الأسبوعي بدقة'
     ],
-    imageSrc: '/images/horse_training.jpg',
+    imageSrc: getAssetPath('/images/horse_training.jpg'),
     imageAlt: 'فارس وخيل عربي في حصة تدريبية متقدمة لقفز الحواجز',
     route: '/programs'
   },
@@ -85,7 +86,7 @@ const pillars: FeaturePillar[] = [
       'متابعة المدفوعات المعلقة وإشعارات التحصيل الذاتية لتقليل التعثر',
       'تقارير أرباح ومصروفات مفصلة لكل حصان ولكل فرع ومربط'
     ],
-    imageSrc: '/images/stable_facility.jpg',
+    imageSrc: getAssetPath('/images/stable_facility.jpg'),
     imageAlt: 'إدارة مالية دقيقة للإيرادات والمصروفات الخاصة بالاسطبلات',
     route: '/finance'
   }

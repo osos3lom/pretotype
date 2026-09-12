@@ -15,6 +15,7 @@ import {
   HeartPulse
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { getAssetPath } from '@/lib/utils';
 
 interface RoleHighlight {
   id: string;
@@ -167,7 +168,7 @@ export default function DemoHero() {
           <div className="relative rounded-2xl sm:rounded-3xl p-2 sm:p-3.5 card-gradient-elevated border-gradient-luxury shadow-2xl">
             <div className="relative aspect-[16/9] w-full rounded-xl sm:rounded-2xl overflow-hidden bg-muted group">
               <Image
-                src="/images/hero_horse.jpg"
+                src={getAssetPath('/images/hero_horse.jpg')}
                 alt="خيل عربي أصيل في مربط فرسان الفاخر"
                 fill
                 priority

@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { getAssetPath } from '@/lib/utils';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { 
@@ -75,7 +76,7 @@ const initialHorses: HorseData[] = [
     ownerPhone: '0501234567',
     stableBox: 'A-01',
     healthStatus: 'ممتازة',
-    image: '/images/hero_horse.jpg',
+    image: getAssetPath('/images/hero_horse.jpg'),
     birthYear: '2020'
   },
   {
@@ -90,7 +91,7 @@ const initialHorses: HorseData[] = [
     ownerPhone: '0559876543',
     stableBox: 'A-02',
     healthStatus: 'ممتازة',
-    image: '/images/horse_training.jpg',
+    image: getAssetPath('/images/horse_training.jpg'),
     birthYear: '2021'
   },
   {
@@ -105,7 +106,7 @@ const initialHorses: HorseData[] = [
     ownerPhone: '0543219876',
     stableBox: 'A-04',
     healthStatus: 'تحت الملاحظة',
-    image: '/images/hero_horse.jpg',
+    image: getAssetPath('/images/hero_horse.jpg'),
     birthYear: '2019'
   },
   {
@@ -120,7 +121,7 @@ const initialHorses: HorseData[] = [
     ownerPhone: '0567891234',
     stableBox: 'A-05',
     healthStatus: 'ممتازة',
-    image: '/images/horse_training.jpg',
+    image: getAssetPath('/images/horse_training.jpg'),
     birthYear: '2022'
   },
   {
@@ -135,7 +136,7 @@ const initialHorses: HorseData[] = [
     ownerPhone: '0509871234',
     stableBox: 'A-07',
     healthStatus: 'ممتازة',
-    image: '/images/hero_horse.jpg',
+    image: getAssetPath('/images/hero_horse.jpg'),
     birthYear: '2018'
   },
   {
@@ -150,7 +151,7 @@ const initialHorses: HorseData[] = [
     ownerPhone: '0533344455',
     stableBox: 'A-08',
     healthStatus: 'ممتازة',
-    image: '/images/horse_training.jpg',
+    image: getAssetPath('/images/horse_training.jpg'),
     birthYear: '2021'
   },
   {
@@ -165,7 +166,7 @@ const initialHorses: HorseData[] = [
     ownerPhone: '0512223344',
     stableBox: 'B-02',
     healthStatus: 'علاج دوري',
-    image: '/images/hero_horse.jpg',
+    image: getAssetPath('/images/hero_horse.jpg'),
     birthYear: '2020'
   },
   {
@@ -180,7 +181,7 @@ const initialHorses: HorseData[] = [
     ownerPhone: '0500000000',
     stableBox: 'B-01',
     healthStatus: 'ممتازة',
-    image: '/images/horse_training.jpg',
+    image: getAssetPath('/images/horse_training.jpg'),
     birthYear: '2023'
   }
 ];
@@ -220,7 +221,7 @@ export default function HorsesPage() {
       ownerPhone: newHorse.ownerPhone || '0500000000',
       stableBox: newHorse.stableBox,
       healthStatus: 'ممتازة',
-      image: '/images/hero_horse.jpg',
+      image: getAssetPath('/images/hero_horse.jpg'),
       birthYear: '2024'
     };
 

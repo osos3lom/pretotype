@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { getAssetPath } from '@/lib/utils';
 
 interface BoxItem {
   id: string;
@@ -83,7 +84,7 @@ const horseProfiles: HorseProfile[] = [
       { name: 'جرعة الديدان الدورية', date: '25 سبتمبر 2026', status: 'valid' },
     ],
     trainingScore: 98,
-    image: '/images/hero_horse.jpg'
+    image: getAssetPath('/images/hero_horse.jpg')
   },
   {
     id: '2',
@@ -102,7 +103,7 @@ const horseProfiles: HorseProfile[] = [
       { name: 'فحص الحافر والدعامات', date: 'مكتمل وموثق', status: 'valid' },
     ],
     trainingScore: 94,
-    image: '/images/horse_training.jpg'
+    image: getAssetPath('/images/horse_training.jpg')
   },
   {
     id: '3',
@@ -121,7 +122,7 @@ const horseProfiles: HorseProfile[] = [
       { name: 'تطعيم المكورات العقدية', date: '20 أغسطس 2026', status: 'valid' },
     ],
     trainingScore: 96,
-    image: '/images/stable_facility.jpg'
+    image: getAssetPath('/images/stable_facility.jpg')
   }
 ];
 
@@ -683,7 +684,7 @@ export default function InteractiveAppSimulator() {
 
                     <div className="rounded-xl overflow-hidden relative aspect-video border border-border">
                       <Image
-                        src="/images/horse_training.jpg"
+                        src={getAssetPath('/images/horse_training.jpg')}
                         alt="حصة تدريب فروسية"
                         fill
                         className="object-cover"

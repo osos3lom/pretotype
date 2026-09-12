@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Sidebar from '@/components/sidebar';
+import { getAssetPath } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -72,7 +73,7 @@ export default function HorseProfilePage() {
             <Card className="rounded-3xl border-border overflow-hidden shadow-sm">
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted">
                 <Image
-                  src="/images/hero_horse.jpg"
+                  src={getAssetPath('/images/hero_horse.jpg')}
                   alt="سفير المشعلية"
                   fill
                   className="object-cover"

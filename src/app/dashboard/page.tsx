@@ -9,6 +9,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Image from 'next/image';
 import Link from 'next/link';
+import { getAssetPath } from '@/lib/utils';
 import { 
   Sparkles, 
   Warehouse, 
@@ -312,9 +313,9 @@ export default function DashboardPage() {
 
             <CardContent className="space-y-3">
               {[
-                { name: 'صقر الجزيرة', breed: 'عربي صقلاوي جدراني', age: '4 سنوات', chip: '982-000-482-SA', status: 'بطل إنتاج', image: '/images/hero_horse.jpg' },
-                { name: 'سفيرة الوادي', breed: 'عربي كحيلان عجوز', age: '3 سنوات', chip: '982-000-519-SA', status: 'قفز حواجز A', image: '/images/horse_training.jpg' },
-                { name: 'كحيلان الشامخ', breed: 'عربي عبيان أم جريس', age: '5 سنوات', chip: '982-000-994-SA', status: 'ترويض واستعراض', image: '/images/hero_horse.jpg' },
+                { name: 'صقر الجزيرة', breed: 'عربي صقلاوي جدراني', age: '4 سنوات', chip: '982-000-482-SA', status: 'بطل إنتاج', image: getAssetPath('/images/hero_horse.jpg') },
+                { name: 'سفيرة الوادي', breed: 'عربي كحيلان عجوز', age: '3 سنوات', chip: '982-000-519-SA', status: 'قفز حواجز A', image: getAssetPath('/images/horse_training.jpg') },
+                { name: 'كحيلان الشامخ', breed: 'عربي عبيان أم جريس', age: '5 سنوات', chip: '982-000-994-SA', status: 'ترويض واستعراض', image: getAssetPath('/images/hero_horse.jpg') },
               ].map((horse, idx) => (
                 <div key={idx} className="flex items-center justify-between p-3 rounded-2xl bg-muted/30 border border-border/50 hover:border-emerald-500/30 transition-all">
                   <div className="flex items-center gap-3">
