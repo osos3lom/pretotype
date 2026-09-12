@@ -1,474 +1,465 @@
-"use client"
-import Sidebar from "@/components/sidebar"
-import React from 'react'
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
-import { Check } from "lucide-react"
-import { Switch } from "@/components/ui/switch"
-import { cn } from "@/lib/utils"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+'use client';
 
-type notifications = {
-  title: string,
-  description: string,
-};
+import React, { useState } from 'react';
+import Link from 'next/link';
+import Sidebar from '@/components/sidebar';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogFooter, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger 
+} from '@/components/ui/dialog';
+import { 
+  Award, 
+  Plus, 
+  Search, 
+  CheckCircle2, 
+  Clock, 
+  Utensils, 
+  Activity, 
+  UserCheck, 
+  ChevronLeft, 
+  TrendingUp, 
+  Sparkles,
+  HeartPulse
+} from 'lucide-react';
 
-type programs = {
-    invoice: string,
-    duration: string,
-    paymentStatus: string,
-    totalAmount: string,
-    paymentMethod: string,
-};
-type TrainingTasks = {
-  status: string,
-  duration: string,
-  paymentStatus: string,
-  totalAmount: string,
-  paymentMethod: string,
-  time:string,
-};
-type Nuttasks = {
-  status: string,
-  duration: string,
-  paymentStatus: string,
-  totalAmount: string,
-  paymentMethod: string,
-  time:string,
-};
-
-const notifications = [
-  {
-    title: "تدريب الخيل سبلت على الممشى",
-    description: "قبل ساعة واحدة",
-  },
-  {
-    title: "تغذية سبلت على الريد ميل بكميات محددة",
-    description: "فبل ساعتين",
-  },
-  {
-    title: "إعطاء الخيل سبلت فترة من الراحة",
-    description: "قبل قليل",
-  },
-]
-const goals = [
-  {
-    title: "تدريب الخيل فزاع على القفز",
-    description: "قبل ساعة واحدة",
-  },
-  {
-    title: "تغذية فزاع على العلف بكميات محددة",
-    description: "فبل ساعتين",
-  },
-  {
-    title: "إعطاء الخيل فزاع فترة من الراحة",
-    description: "قبل قليل",
-  },
-]
-
-const programs = [
-  {
-    invoice: "تم",
-    duration: "شهر ",
-    paymentStatus: "سفير",
-    totalAmount: "PROG001",
-    paymentMethod: "تدريب الصحة",
-  },
-  {
-    invoice: "قيد التنفيذ",
-    duration: "ستة أشهر ",
-    paymentStatus: "علياء",
-    totalAmount: "PROG001",
-    paymentMethod: "تدريب الصحة",
-  },
-  {
-    invoice: "تم",
-    duration: "أسبوعين ",
-    paymentStatus: "سبليت",
-    totalAmount: "PROG002",
-    paymentMethod: "تدريب التحمل",
-  },
-  {
-    invoice: "قيد التدريب",
-    duration: "أسبوع ",
-    paymentStatus: "فزاع",
-    totalAmount: "PROG003",
-    paymentMethod: "تدريب القفز",
-  },
-  {
-    invoice: "تحت الإجراء",
-    duration: "شهر ",
-    paymentStatus: "سفير",
-    totalAmount: "NUTR001",
-    paymentMethod: "  تغذية عادية",
-  },
-  {
-    invoice: "قيد الإجراء",
-    duration: "شهر ",
-    paymentStatus: "فزاع",
-    totalAmount: "NUTR002",
-    paymentMethod: " تغذية الأبطال",
-  },
-  {
-    invoice: "قيد التنفيذ",
-    duration: "شهر ",
-    paymentStatus: "فايزة",
-    totalAmount: "NUTR003",
-    paymentMethod: "حمية التنزيل",
-  },
-]
-const TrainingTasks = [
-  {
-    status: "تم",
-    duration: "مطلق الحنيطي",
-    paymentStatus: "سفير",
-    totalAmount: "PROG001",
-    paymentMethod: "تدريب الصحة",
-    time:"10:00am"
-  },
-  {
-    status: "قيد التنفيذ",
-    duration: "الوليد الفرحان",
-    paymentStatus: "علياء",
-    totalAmount: "PROG001",
-    paymentMethod: "تدريب الصحة",
-    time:"10:00am"
-  },
-  {
-    status: "تم",
-    duration: " ابراهيم السالمي",
-    paymentStatus: "سبليت",
-    totalAmount: "PROG002",
-    paymentMethod: "تدريب التحمل",
-    time:"10:00am"
-  },
-  {
-    status: "قيد التدريب",
-    duration: " فيصل الكعيبي",
-    paymentStatus: "فزاع",
-    totalAmount: "PROG003",
-    paymentMethod: "تدريب القفز",
-    time:"10:00am"
-  },
-]
-
-const Nuttasks = [
-  
-  {
-    status: "تحت الإجراء",
-    duration: "عمر الحوت",
-    paymentStatus: "سفير",
-    totalAmount: "NUTR001",
-    paymentMethod: "  تغذية عادية",
-    time:"10:00am"
-  },
-  {
-    status: "قيد الإجراء",
-    duration: "سمير العمودي",
-    paymentStatus: "فزاع",
-    totalAmount: "NUTR002",
-    paymentMethod: " تغذية الأبطال",
-    time:"10:00am"
-  },
-  {
-    status: "قيد التنفيذ",
-    duration: "سالم الواصل",
-    paymentStatus: "فايزة",
-    totalAmount: "NUTR003",
-    paymentMethod: "حمية التنزيل",
-    time:"10:00am"
-  },
-]
- 
-
-export default function ProgramsPage() {
-  
-  return (
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <Sidebar/>
-      <main className="flex mr-10 min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 md:p-10 sm:mr-3">
-          <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">
-            <div className="grid gap-4 mr-9 md:grid-cols-2 lg:grid-cols-2">
-          <Card>
-              <CardHeader className="flex flex-row items-center justify-center pb-2 space-y-0">
-                
-                <CardTitle className="text-m text-right font-bold">البرامج </CardTitle>
-              </CardHeader>
-                
-              <CardContent>
-                <div className="flex justify-end">
-                  <div className="text-xs pt-3 text-gray-500 dark:text-gray-400 mr-2">برنامج</div>
-                  <div className="text-2xl font-bold">27</div>
-                </div>
-                <div className="flex justify-end">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">برامج جديدة خلال اخر 30 يوم</p>
-                    <p className="text-xs text-right mr-3 justify-end text-green-500 dark:text-green-400 ml-2">+10</p>
-                </div>
-                
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-center pb-2 space-y-0">
-               <CardTitle className="text-m font-bold"> الأهداف</CardTitle>
-              </CardHeader>
-                
-              <CardContent>
-                <div className="flex justify-end">
-                  <div className="text-xs pt-3 text-gray-500 dark:text-gray-400 mr-2">هدف</div>
-                  <div className="text-2xl font-bold">2</div>
-                </div>
-                <div className="flex justify-end">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">أهداف تم تحقيقها خلال اخر 30 يوم</p>
-                    <p className="text-xs text-right  justify-end text-green-500 dark:text-green-400 ml-2">4</p>
-                </div>
-                
-              </CardContent>
-            </Card>
-            </div>
-            
-        
-    <Tabs defaultValue="account" className="w-full pr-6 pl-3">
-      <TabsList className="grid w-full grid-cols-3">
-        
-        <TabsTrigger value="tasks">المهام</TabsTrigger>
-        <TabsTrigger value="programs">البرامج</TabsTrigger>
-        <TabsTrigger value="goals">الأهداف</TabsTrigger>
-      </TabsList>
-      <TabsContent value="goals">
-        <div className="flex gap-4">        
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-right"> تدريب سبلت من أجل سباق التحمل</CardTitle>
-              <CardDescription className="text-right">لديك 3 برامج لتحقيق الهدف</CardDescription>
-            </CardHeader>
-            <CardContent className="grid gap-4">
-              <div className=" flex items-center space-x-4 rounded-md border p-4">
-                  
-                <div className="flex ">
-                    
-                  <div className="flex-1 ml-3 mr-9 ">
-                  <p className="text-sm text-right font-medium leading-none">
-                    السماح بالإشعارات
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                      أرسل اشعارات بخصوص تحقيق الهدف
-                  </p>
-
-                    </div>
-                    <Switch className="flex ml-auto" />
-                    
-                  </div>
-                  
-                </div>
-                <div className="flex flex-col-reverse">
-          {notifications.map((notification, index) => (
-            <div
-              key={index}
-              className="mb-4 grid grid-cols-[25px_1fr] items-end pb-4 last:mb-0 last:pb-0"
-            >
-              <span className="flex justify-end h-2 w-2 rounded-full bg-sky-500" />
-              <div className="">
-                <p className="text-sm font-medium leading-none text-right">
-                  {notification.title}
-                </p>
-                <p className="text-sm text-muted-foreground text-right">
-                  {notification.description}
-                </p>
-              </div>
-              
-            </div>
-          ))}
-        </div>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full">
-                  <Check className="mr-2 h-4 w-4" /> التحديد على الكل بتم
-                </Button>
-              </CardFooter>
-            </Card>
-              <Card>
-              <CardHeader>
-                <CardTitle className="text-right">تدريب فزاع لتحقيق مركز في سباق القفز </CardTitle>
-                <CardDescription className="text-right">لديك 3 برامج لتحقيق الهدف</CardDescription>
-              </CardHeader>
-              <CardContent className="grid gap-4">
-                <div className=" flex items-center space-x-4 rounded-md border p-4">
-                  
-                  <div className="flex ">
-                    
-                    <div className="flex-1 ml-3 mr-9 ">
-                    <p className="text-sm text-right font-medium leading-none">
-                      السماح بالإشعارات
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      أرسل اشعارات بخصوص تحقيق الهدف
-                    </p>
-
-                    </div>
-                    <Switch className="flex ml-auto" />
-                    
-                  </div>
-                  
-                </div>
-                <div className="flex flex-col-reverse">
-          {goals.map((goals, index) => (
-            <div
-              key={index}
-              className="mb-4 grid grid-cols-[25px_1fr] items-end pb-4 last:mb-0 last:pb-0"
-            >
-              <span className="flex justify-end h-2 w-2 rounded-full bg-sky-500" />
-              <div className="">
-                <p className="text-sm font-medium leading-none text-right">
-                  {goals.title}
-                </p>
-                <p className="text-sm text-muted-foreground text-right">
-                  {goals.description}
-                </p>
-              </div>
-              
-            </div>
-          ))}
-        </div>
-              </CardContent>
-              <CardFooter>
-                <Button className="w-full">
-                  <Check className="mr-2 h-4 w-4" /> التحديد على الكل بتم
-                </Button>
-              </CardFooter>
-            </Card>
-    </div>
-      </TabsContent>
-      <TabsContent value="programs">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-center">البرامج</CardTitle>
-            <CardDescription className="text-center">
-              اختر البرنامج من أجل إضافة مهمة أو عمل تغيير
-            </CardDescription>
-            <div>
-              <Button >إضافة برنامج</Button>
-            </div>
-          </CardHeader>
-          <Table>      
-            <TableHeader>
-              <TableRow>                
-                <TableHead className="text-center">الحالة</TableHead>
-                <TableHead className="text-center">المدة</TableHead>
-                <TableHead className="text-center">الخيل</TableHead>
-                <TableHead className="text-center">اسم البرنامج</TableHead>
-                <TableHead className="w-[100px]">رمز البرنامج</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {programs.map((invoice) => (
-                <TableRow key={invoice.invoice}>
-                  <TableCell className="text-center font-medium">{invoice.invoice}</TableCell>
-                  <TableCell className="text-center font-medium">{invoice.duration}</TableCell>
-                  
-                  <TableCell className="text-center">{invoice.paymentStatus}</TableCell>
-                  <TableCell className="text-center">{invoice.paymentMethod}</TableCell>
-                  <TableCell className="text-center">{invoice.totalAmount}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>            
-          </Table>         
-        </Card>
-      </TabsContent>
-      <TabsContent value="tasks">
-      <Card>
-          <CardHeader>
-            <CardTitle className="text-center">برنامج التغذية العادية </CardTitle>
-            <CardDescription className="text-center">
-              قم بإضافة مهمة أو قم بعمل تغيير
-            </CardDescription>
-            <div className="flex gap-3">
-              <Button >إضافة مهمة</Button>
-              <Button >تعديل البرنامج</Button>
-            </div>            
-          </CardHeader>
-          <Table>      
-            <TableHeader>
-              <TableRow>                
-                <TableHead className="text-center">الحالة</TableHead>
-                <TableHead className="text-center">صاحب الخيل</TableHead>
-                <TableHead className="text-center">الوقت </TableHead>
-                <TableHead className="text-center">الخيول</TableHead>                
-                <TableHead className="text-center"> المهمة</TableHead>                
-                <TableHead className="w-[100px]">رمز البرنامج</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {Nuttasks.map((invoice) => (
-                <TableRow key={invoice.status}>
-                  <TableCell className="text-center font-medium">{invoice.status}</TableCell>
-                  <TableCell className="text-center font-medium">{invoice.duration}</TableCell>
-                  <TableCell className="text-center font-medium">{invoice.time}</TableCell>
-                  <TableCell className="text-center">{invoice.paymentStatus}</TableCell>
-                  <TableCell className="text-center">{invoice.paymentMethod}</TableCell>
-                  <TableCell className="text-center">{invoice.totalAmount}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>          
-        </Card>
-        <Card className="mt-3">
-        <CardHeader>
-            <CardTitle className="text-center">برنامج التدريب </CardTitle>
-            <CardDescription className="text-center">
-              قم بإضافة مهمة أو قم بعمل تغيير
-            </CardDescription>
-            <div className="flex gap-3">
-              <Button >إضافة مهمة</Button>
-              <Button >تعديل البرنامج</Button>
-            </div>            
-          </CardHeader>
-          <Table>      
-            <TableHeader>
-              <TableRow>                
-                <TableHead className="text-center">الحالة</TableHead>
-                <TableHead className="text-center">صاحب الخيل</TableHead>
-                <TableHead className="text-center">الوقت</TableHead>
-                <TableHead className="text-center">الخيول</TableHead>
-                <TableHead className="text-center">اسم المهمة</TableHead>
-                <TableHead className="w-[100px]">رمز البرنامج</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {TrainingTasks.map((invoice) => (
-                <TableRow key={invoice.status}>
-                  <TableCell className="text-center font-medium">{invoice.status}</TableCell>
-                  <TableCell className="text-center font-medium">{invoice.duration}</TableCell>
-                  <TableCell className="text-center">{invoice.time}</TableCell>
-                  <TableCell className="text-center">{invoice.paymentStatus}</TableCell>
-                  <TableCell className="text-center">{invoice.paymentMethod}</TableCell>
-                  <TableCell className="text-center">{invoice.totalAmount}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>            
-          </Table>          
-        </Card>
-        
-        
-
-      </TabsContent>
-    </Tabs>
-    </div>
-      </main>
-      
-  </div>
-  )
+interface TrainingProgram {
+  id: string;
+  code: string;
+  title: string;
+  horse: string;
+  rider: string;
+  trainer: string;
+  discipline: 'قفز حواجز' | 'ترويض (Dressage)' | 'قدرة وتحمل' | 'مدرسة الفروسية';
+  level: 'مبتدئ' | 'متوسط' | 'متقدم' | 'بطولات';
+  progress: number;
+  duration: string;
+  status: 'active' | 'completed' | 'paused';
 }
 
+const initialPrograms: TrainingProgram[] = [
+  { id: '1', code: 'PROG-01', title: 'برنامج الإعداد لبطولة قفز الحواجز الوطنية', horse: 'سفيرة الوادي', rider: 'مشاري العتيبي', trainer: 'كابتن زياد الحربي', discipline: 'قفز حواجز', level: 'بطولات', progress: 85, duration: '3 أشهر (الأسبوع 9)', status: 'active' },
+  { id: '2', code: 'PROG-02', title: 'دورة الترويض الكلاسيكي وتناغم الفارس', horse: 'كحيلان الشامخ', rider: 'سعود بن ناصر', trainer: 'كابتن راشد الدوسري', discipline: 'ترويض (Dressage)', level: 'متقدم', progress: 60, duration: 'شهرين (الأسبوع 5)', status: 'active' },
+  { id: '3', code: 'PROG-03', title: 'تأهيل ورفع لياقة التحمل والمسافات الطويلة', horse: 'برقان العز', rider: 'باسم القحطاني', trainer: 'كابتن منصور الحربي', discipline: 'قدرة وتحمل', level: 'متوسط', progress: 95, duration: 'شهر (الأسبوع 4)', status: 'active' },
+  { id: '4', code: 'PROG-04', title: 'أساسيات الركوب والتحكم في الحصان', horse: 'درة الميدان', rider: 'نورة السعدون', trainer: 'كابتن زياد الحربي', discipline: 'مدرسة الفروسية', level: 'مبتدئ', progress: 40, duration: '6 أسابيع (الأسبوع 3)', status: 'active' },
+];
+
+interface CareTask {
+  id: string;
+  task: string;
+  horse: string;
+  box: string;
+  dueTime: string;
+  assignedGroom: string;
+  completed: boolean;
+}
+
+const initialTasks: CareTask[] = [
+  { id: 't1', task: 'تدريب الخيل سبلت على المشاية الدوارة (Walker)', horse: 'سفيرة الوادي', box: 'A-02', dueTime: '08:00 ص', assignedGroom: 'حسين', completed: true },
+  { id: 't2', task: 'وجبة العلف الصباحية وخلط مكمل الفيتامينات', horse: 'صقر الجزيرة', box: 'A-01', dueTime: '08:30 ص', assignedGroom: 'حسين', completed: true },
+  { id: 't3', task: 'تبريد مائي للأوتار وتدليك العضلات بعد التدريب', horse: 'كحيلان الشامخ', box: 'A-04', dueTime: '11:00 ص', assignedGroom: 'سالم', completed: true },
+  { id: 't4', task: 'تغيير النشارة وتعقيم أرضية الغرفة', horse: 'ريم الصحراء', box: 'A-05', dueTime: '02:00 م', assignedGroom: 'إبراهيم', completed: false },
+  { id: 't5', task: 'وجبة التبن والألياف المسائية', horse: 'برقان العز', box: 'A-07', dueTime: '06:00 م', assignedGroom: 'محمد', completed: false },
+];
+
+export default function ProgramsPage() {
+  const [programs, setPrograms] = useState<TrainingProgram[]>(initialPrograms);
+  const [tasks, setTasks] = useState<CareTask[]>(initialTasks);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState('programs');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  // New Program State
+  const [newProg, setNewProg] = useState({
+    title: '',
+    horse: 'صقر الجزيرة',
+    rider: '',
+    trainer: 'كابتن زياد الحربي',
+    discipline: 'قفز حواجز' as TrainingProgram['discipline'],
+    level: 'متوسط' as TrainingProgram['level'],
+    duration: 'شهر'
+  });
+
+  const handleAddProgram = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newProg.title || !newProg.rider) return;
+
+    const added: TrainingProgram = {
+      id: String(Date.now()),
+      code: `PROG-0${programs.length + 1}`,
+      title: newProg.title,
+      horse: newProg.horse,
+      rider: newProg.rider,
+      trainer: newProg.trainer,
+      discipline: newProg.discipline,
+      level: newProg.level,
+      progress: 10,
+      duration: newProg.duration,
+      status: 'active'
+    };
+
+    setPrograms([added, ...programs]);
+    setIsAddModalOpen(false);
+    setNewProg({ title: '', horse: 'صقر الجزيرة', rider: '', trainer: 'كابتن زياد الحربي', discipline: 'قفز حواجز', level: 'متوسط', duration: 'شهر' });
+  };
+
+  const handleToggleTask = (taskId: string) => {
+    setTasks(tasks.map((t) => (t.id === taskId ? { ...t, completed: !t.completed } : t)));
+  };
+
+  const completedTasksCount = tasks.filter((t) => t.completed).length;
+
+  return (
+    <div className="flex min-h-screen w-full bg-muted/30">
+      <Sidebar />
+
+      {/* Main Workspace Canvas with native RTL right-sidebar offset */}
+      <main className="flex-1 sm:mr-16 lg:mr-20 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
+        
+        {/* Top Header & Actions */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-card p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-border shadow-sm">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
+              <span className="text-xs font-semibold text-muted-foreground">أكاديمية فرسان • برامج التدريب والتغذية والرعاية اليومية</span>
+            </div>
+            <h1 className="font-saudi text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+              برامج التدريب والتغذية
+            </h1>
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              متابعة الخطط التدريبية المخصصة لكل خيل وفارس، وجداول الأعلاف والمكملات الغذائية.
+            </p>
+          </div>
+
+          <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" className="bg-gradient-to-r from-[#3e1342] to-[#5c1c5a] hover:from-[#4e1853] hover:to-[#6d216b] text-white dark:from-[#f5c777] dark:to-[#d69534] dark:text-slate-950 font-bold text-xs rounded-xl h-9 gap-1.5 shadow-md shadow-purple-950/20 dark:shadow-amber-500/20">
+                <Plus className="w-3.5 h-3.5" />
+                تسجيل برنامج تدريب جديد
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <form onSubmit={handleAddProgram}>
+                <DialogHeader>
+                  <DialogTitle className="font-saudi text-xl">تسجيل مسار تدريبي جديد</DialogTitle>
+                  <DialogDescription className="text-xs text-muted-foreground">
+                    عيّن الفارس والخيل والمدرب المشرف لتتبع الخطة التدريبية.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="space-y-3 py-4 text-xs">
+                  <div className="space-y-1">
+                    <label className="font-bold text-foreground">عنوان البرنامج التدريبي:</label>
+                    <Input
+                      required
+                      placeholder="مثال: دورة قفز حواجز مكثفة"
+                      value={newProg.title}
+                      onChange={(e) => setNewProg({ ...newProg, title: e.target.value })}
+                      className="rounded-xl text-xs"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="font-bold text-foreground">الخيل المسند:</label>
+                      <Input
+                        placeholder="صقر الجزيرة"
+                        value={newProg.horse}
+                        onChange={(e) => setNewProg({ ...newProg, horse: e.target.value })}
+                        className="rounded-xl text-xs"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <label className="font-bold text-foreground">اسم الفارس / المتدرب:</label>
+                      <Input
+                        required
+                        placeholder="مشاري العتيبي"
+                        value={newProg.rider}
+                        onChange={(e) => setNewProg({ ...newProg, rider: e.target.value })}
+                        className="rounded-xl text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1">
+                      <label className="font-bold text-foreground">التخصص:</label>
+                      <select
+                        value={newProg.discipline}
+                        onChange={(e) => setNewProg({ ...newProg, discipline: e.target.value as any })}
+                        className="w-full h-9 rounded-xl border border-input bg-background px-3 py-1 text-xs focus:ring-2 focus:ring-primary outline-none"
+                      >
+                        <option value="قفز حواجز">قفز حواجز</option>
+                        <option value="ترويض (Dressage)">ترويض (Dressage)</option>
+                        <option value="قدرة وتحمل">قدرة وتحمل</option>
+                        <option value="مدرسة الفروسية">مدرسة الفروسية</option>
+                      </select>
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="font-bold text-foreground">المستوى:</label>
+                      <select
+                        value={newProg.level}
+                        onChange={(e) => setNewProg({ ...newProg, level: e.target.value as any })}
+                        className="w-full h-9 rounded-xl border border-input bg-background px-3 py-1 text-xs focus:ring-2 focus:ring-primary outline-none"
+                      >
+                        <option value="مبتدئ">مبتدئ</option>
+                        <option value="متوسط">متوسط</option>
+                        <option value="متقدم">متقدم</option>
+                        <option value="بطولات">بطولات</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="font-bold text-foreground">المدرب المشرف:</label>
+                    <Input
+                      placeholder="كابتن زياد الحربي"
+                      value={newProg.trainer}
+                      onChange={(e) => setNewProg({ ...newProg, trainer: e.target.value })}
+                      className="rounded-xl text-xs"
+                    />
+                  </div>
+                </div>
+
+                <DialogFooter>
+                  <Button type="button" variant="outline" size="sm" onClick={() => setIsAddModalOpen(false)} className="rounded-xl text-xs">
+                    إلغاء
+                  </Button>
+                  <Button type="submit" size="sm" className="bg-gradient-to-r from-[#3e1342] to-[#5c1c5a] text-white dark:from-[#f5c777] dark:to-[#d69534] dark:text-slate-950 font-bold rounded-xl text-xs">
+                    تأكيد التسجيل
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        {/* 4 Summary Metric Chips */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card className="rounded-2xl border-border shadow-sm">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div>
+                <span className="text-xs text-muted-foreground block">البرامج النشطة حالياً</span>
+                <div className="text-2xl font-extrabold text-foreground mt-0.5">{programs.length} <span className="text-xs font-normal">برنامج</span></div>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-purple-500/15 flex items-center justify-center text-purple-700 dark:text-purple-300">
+                <Award className="w-5 h-5" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-2xl border-border shadow-sm">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div>
+                <span className="text-xs text-muted-foreground block">الفرسان المسجلين بالبرامج</span>
+                <div className="text-2xl font-extrabold text-foreground mt-0.5">68 <span className="text-xs font-normal">فارس</span></div>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                <UserCheck className="w-5 h-5" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-2xl border-border shadow-sm">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div>
+                <span className="text-xs text-muted-foreground block">مهام الرعاية اليومية</span>
+                <div className="text-2xl font-extrabold text-foreground mt-0.5">{completedTasksCount} / {tasks.length} <span className="text-xs font-normal">مكتملة</span></div>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-600">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-2xl border-border shadow-sm">
+            <CardContent className="p-4 flex items-center justify-between">
+              <div>
+                <span className="text-xs text-muted-foreground block">ساعات التدريب المنجزة</span>
+                <div className="text-2xl font-extrabold text-foreground mt-0.5">142 <span className="text-xs font-normal">ساعة</span></div>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-blue-500/15 flex items-center justify-center text-blue-600">
+                <Clock className="w-5 h-5" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Workspaces Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div className="bg-card p-1.5 rounded-2xl border border-border shadow-sm mb-6 max-w-xl">
+            <TabsList className="grid grid-cols-3 gap-1 h-auto bg-transparent">
+              <TabsTrigger value="programs" className="rounded-xl py-2 text-xs font-bold">
+                مسارات التدريب
+              </TabsTrigger>
+              <TabsTrigger value="nutrition" className="rounded-xl py-2 text-xs font-bold">
+                جداول التغذية
+              </TabsTrigger>
+              <TabsTrigger value="tasks" className="rounded-xl py-2 text-xs font-bold">
+                مهام الرعاية اليومية
+              </TabsTrigger>
+            </TabsList>
+          </div>
+
+          {/* TAB 1: TRAINING TRACKS */}
+          <TabsContent value="programs" className="space-y-4 animate-in fade-in duration-300">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {programs.map((prog) => (
+                <Card key={prog.id} className="rounded-3xl border-border p-6 shadow-sm space-y-4 hover:shadow-md transition-shadow">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <span className="text-xs font-mono font-bold text-amber-600">{prog.code}</span>
+                      <h3 className="font-extrabold text-base text-foreground mt-0.5">{prog.title}</h3>
+                    </div>
+                    <Badge variant="outline" className="text-xs font-bold">
+                      {prog.level}
+                    </Badge>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-xs bg-muted/30 p-3 rounded-2xl border border-border/50">
+                    <div>
+                      <span className="text-muted-foreground block">الخيل:</span>
+                      <strong className="text-foreground">{prog.horse}</strong>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground block">الفارس:</span>
+                      <strong className="text-foreground">{prog.rider}</strong>
+                    </div>
+                    <div className="pt-2">
+                      <span className="text-muted-foreground block">المدرب:</span>
+                      <strong className="text-foreground">{prog.trainer}</strong>
+                    </div>
+                    <div className="pt-2">
+                      <span className="text-muted-foreground block">المدة:</span>
+                      <strong className="text-foreground">{prog.duration}</strong>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between text-xs font-bold">
+                      <span className="text-muted-foreground">نسبة إنجاز المسار:</span>
+                      <span className="text-amber-600">{prog.progress}%</span>
+                    </div>
+                    <div className="w-full h-2 rounded-full bg-muted overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-[#3e1342] to-[#e5b35b] dark:from-[#dca84e] dark:to-[#be842c] rounded-full" style={{ width: `${prog.progress}%` }} />
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+
+          {/* TAB 2: NUTRITION SCHEDULES */}
+          <TabsContent value="nutrition" className="space-y-4 animate-in fade-in duration-300">
+            <Card className="rounded-3xl border-border overflow-hidden shadow-sm">
+              <CardHeader className="p-6 pb-4">
+                <CardTitle className="font-saudi text-lg flex items-center gap-2">
+                  <Utensils className="w-5 h-5 text-amber-600" />
+                  <span>برنامج التغذية المقننة والحصص اليومية</span>
+                </CardTitle>
+                <CardDescription className="text-xs">
+                  جدول الوجبات الصباحية، الظهيرة، والمسائية مع المكملات المعتمدة من العيادة البيطرية.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <Table>
+                    <TableHeader className="bg-muted/40">
+                      <TableRow>
+                        <TableHead className="text-right text-xs font-bold">الخيل</TableHead>
+                        <TableHead className="text-right text-xs font-bold">الوجبة الصباحية (06:00 ص)</TableHead>
+                        <TableHead className="text-right text-xs font-bold">وجبة الظهيرة (01:00 م)</TableHead>
+                        <TableHead className="text-right text-xs font-bold">الوجبة المسائية (07:00 م)</TableHead>
+                        <TableHead className="text-right text-xs font-bold">المكملات الغذائية</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {[
+                        { horse: 'صقر الجزيرة', morning: '3 كجم علف مركز + تبن بروتين', noon: 'تبن شعير فاخر 2 كجم', night: '3 كجم علف مخصص + جزر مقطع', sup: 'مكمل كيراتين الحوافر + إلكترولايت' },
+                        { horse: 'سفيرة الوادي', morning: '2.5 كجم علف طاقة قفز الحواجز', noon: '2 كجم تبن ألفالفا أخضر', night: '2.5 كجم علف + نخالة دافئة', sup: 'مكمل مفاصل وكولاجين طبي' },
+                        { horse: 'كحيلان الشامخ', morning: 'نظام حمية وقائي خاص 2 كجم', noon: 'تبن ألياف طويلة 1.5 كجم', night: '2 كجم علف خفيف + بذور كتان', sup: 'مضاد أكسدة + فيتامين E' },
+                        { horse: 'برقان العز', morning: '3.5 كجم علف قدرة وتحمل', noon: 'تبن رودس 2 كجم', night: '3 كجم علف مركز + عسل طبيعي', sup: 'أملاح طاقة وسوائل هيدريشن' },
+                      ].map((row, i) => (
+                        <TableRow key={i} className="hover:bg-muted/30 transition-colors">
+                          <TableCell className="font-extrabold text-xs sm:text-sm text-foreground">{row.horse}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground">{row.morning}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground">{row.noon}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground">{row.night}</TableCell>
+                          <TableCell className="text-xs font-bold text-amber-700 dark:text-amber-300">{row.sup}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* TAB 3: DAILY CARE TASKS CHECKLIST */}
+          <TabsContent value="tasks" className="space-y-4 animate-in fade-in duration-300">
+            <Card className="rounded-3xl border-border p-6 shadow-sm space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-saudi text-lg font-extrabold text-foreground">قائمة مهام الرعاية والتشغيل لليوم</h3>
+                  <p className="text-xs text-muted-foreground">اضغط على المهمة لتأكيد إنجازها وتحديث سجل السايس</p>
+                </div>
+                <Badge variant="outline" className="text-xs bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30 font-bold">
+                  {completedTasksCount} من {tasks.length} مهام مكتملة
+                </Badge>
+              </div>
+
+              <div className="space-y-2.5 pt-2">
+                {tasks.map((task) => (
+                  <div
+                    key={task.id}
+                    onClick={() => handleToggleTask(task.id)}
+                    className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-4 ${
+                      task.completed
+                        ? 'bg-muted/20 border-border/40 opacity-70'
+                        : 'bg-card border-border hover:border-amber-500/40 shadow-sm'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-colors ${
+                        task.completed ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-border bg-background'
+                      }`}>
+                        {task.completed && <CheckCircle2 className="w-4 h-4" />}
+                      </div>
+                      <div>
+                        <span className={`font-bold text-xs sm:text-sm block ${task.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
+                          {task.task}
+                        </span>
+                        <span className="text-[11px] text-muted-foreground">
+                          الخيل: <strong className="text-foreground">{task.horse}</strong> • البوكس: {task.box} • السايس: {task.assignedGroom}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-mono font-bold text-muted-foreground">{task.dueTime}</span>
+                      <Badge className={task.completed ? 'bg-emerald-700 text-white text-[10px]' : 'bg-amber-600 text-white text-[10px]'}>
+                        {task.completed ? 'تم الإنجاز' : 'قيد الانتظار'}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </TabsContent>
+        </Tabs>
+
+      </main>
+    </div>
+  );
+}

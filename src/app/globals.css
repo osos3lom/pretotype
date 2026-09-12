@@ -2,75 +2,428 @@
 @tailwind components;
 @tailwind utilities;
 
-  @layer base {
-    :root {
-      --background: 39.2, 73.3%, 80.4%;
-      --foreground: 299.5, 48.6%, 11.6%;
+@layer base {
+  :root {
+    /* =========================================================
+       FURSAN — LUXURY BURGUNDY / CREAM
+       ========================================================= */
 
-      --card: 50 100% 90%;
-      --card-foreground: 222.2 84% 4.9%;
+    /* Foundation */
+    --background: 38 42% 96%;
+    --foreground: 345 42% 12%;
 
-      --popover: 50 100% 90%;
-      --popover-foreground: 222.2 84% 4.9%;
+    /* Surfaces */
+    --card: 40 38% 98%;
+    --card-foreground: 345 42% 13%;
 
-      --primary: 20 50% 40%;
-      --primary-foreground: 50 100% 90%;
+    --popover: 40 38% 98%;
+    --popover-foreground: 345 42% 13%;
 
-      --secondary: 210 40% 96.1%;
-      --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Brand Burgundy */
+    --primary: 345 48% 24%;
+    --primary-foreground: 38 55% 95%;
 
-      --muted: 210 40% 96.1%;
-      --muted-foreground: 215.4 16.3% 46.9%;
+    /* Cream / Champagne */
+    --secondary: 38 42% 89%;
+    --secondary-foreground: 345 45% 18%;
 
-      --accent: 210 40% 96.1%;
-      --accent-foreground: 222.2 47.4% 11.2%;
+    /* Softened surfaces */
+    --muted: 38 25% 91%;
+    --muted-foreground: 345 20% 43%;
 
-      --destructive: 0 84.2% 60.2%;
-      --destructive-foreground: 210 40% 98%;
+    /* Luxury Accent */
+    --accent: 38 48% 83%;
+    --accent-foreground: 345 48% 17%;
 
-      --border: 311.2, 100%, 11.6%;
-      --input: 214.3 31.8% 91.4%;
-      --ring: 299.5, 48.6%, 11.6%;
+    /* System */
+    --destructive: 0 70% 48%;
+    --destructive-foreground: 0 0% 100%;
 
-      --radius: 0.5rem;
-    }
+    --border: 345 18% 82%;
+    --input: 345 18% 84%;
+    --ring: 345 48% 30%;
 
-    .dark {
-      --background: 290 50% 10%;
-      --foreground: 39.2, 73.3%, 80.4%;
-
-      --card: 290 50% 10%;
-      --card-foreground: 210 40% 98%;
-
-      --popover: 310 100% 10%;
-      --popover-foreground: 210 40% 98%;
-
-      --primary: 39.2, 73.3%, 80.4%;
-      --primary-foreground: 222.2 47.4% 11.2%;
-
-      --secondary: 299.5, 48.6%, 11.6%;
-      --secondary-foreground: 210 40% 98%;
-
-      --muted: 320 50% 20%;
-      --muted-foreground: 215 20.2% 65.1%;
-
-      --accent: 299.5, 48.6%, 11.6%;
-      --accent-foreground: 210 40% 98%;
-
-      --destructive: 0 62.8% 30.6%;
-      --destructive-foreground: 210 40% 98%;
-
-      --border: 39.2, 73.3%, 80.4%;
-      --input: 217.2 32.6% 17.5%;
-      --ring: 212.7 26.8% 83.9%;
-    }
+    --radius: 0.85rem;
   }
 
-  @layer base {
-    * {
-      @apply border-border;
-    }
-    body {
-      @apply bg-background text-foreground;
-    }
+  .dark {
+    /* =========================================================
+       DARK — BURGUNDY OBSIDIAN / ANTIQUE CREAM
+       ========================================================= */
+
+    --background: 345 38% 7%;
+    --foreground: 38 38% 89%;
+
+    --card: 345 34% 10%;
+    --card-foreground: 38 38% 91%;
+
+    --popover: 345 36% 9%;
+    --popover-foreground: 38 38% 91%;
+
+    /* Burgundy remains the brand */
+    --primary: 345 48% 58%;
+    --primary-foreground: 345 45% 8%;
+
+    /* Dark Cream */
+    --secondary: 345 25% 17%;
+    --secondary-foreground: 38 38% 88%;
+
+    --muted: 345 22% 14%;
+    --muted-foreground: 38 22% 64%;
+
+    /* Champagne Accent */
+    --accent: 38 55% 58%;
+    --accent-foreground: 345 45% 8%;
+
+    --destructive: 0 55% 42%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 38 22% 23%;
+    --input: 38 22% 20%;
+    --ring: 38 55% 58%;
   }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+
+    direction: rtl;
+
+    /*
+      LIGHT LUXURY CANVAS
+
+      Cream base
+      + subtle champagne glow
+      + very soft burgundy atmosphere
+    */
+    background-image:
+      radial-gradient(
+        circle at 8% 8%,
+        hsl(38 65% 78% / 0.24) 0,
+        transparent 34%
+      ),
+      radial-gradient(
+        circle at 92% 18%,
+        hsl(345 48% 42% / 0.08) 0,
+        transparent 38%
+      ),
+      radial-gradient(
+        circle at 78% 92%,
+        hsl(345 45% 28% / 0.09) 0,
+        transparent 42%
+      ),
+      linear-gradient(
+        135deg,
+        hsl(40 42% 97%) 0%,
+        hsl(38 38% 95%) 48%,
+        hsl(35 32% 94%) 100%
+      );
+
+    background-attachment: fixed;
+    background-size: cover;
+  }
+
+  .dark body {
+    /*
+      DARK LUXURY CANVAS
+
+      Burgundy-black foundation
+      + wine glow
+      + restrained champagne light
+    */
+    background-image:
+      radial-gradient(
+        circle at 12% 8%,
+        hsl(345 55% 38% / 0.22) 0,
+        transparent 32%
+      ),
+      radial-gradient(
+        circle at 88% 20%,
+        hsl(38 55% 55% / 0.08) 0,
+        transparent 34%
+      ),
+      radial-gradient(
+        circle at 75% 88%,
+        hsl(345 65% 25% / 0.26) 0,
+        transparent 40%
+      ),
+      linear-gradient(
+        135deg,
+        hsl(345 38% 7%) 0%,
+        hsl(345 36% 9%) 48%,
+        hsl(340 32% 8%) 100%
+      );
+
+    background-attachment: fixed;
+    background-size: cover;
+  }
+
+  ::selection {
+    background: hsl(345 48% 30% / 0.20);
+    color: hsl(345 48% 15%);
+  }
+
+  .dark ::selection {
+    background: hsl(38 55% 58% / 0.22);
+    color: hsl(38 50% 92%);
+  }
+}
+
+@layer utilities {
+  /* =========================================================
+     LUXURY GRADIENT SYSTEM
+     ========================================================= */
+
+  /*
+    Deep Burgundy
+    Best for hero sections, navigation, major CTAs
+  */
+  .bg-gradient-burgundy {
+    background:
+      radial-gradient(
+        circle at 15% 15%,
+        hsl(345 55% 38% / 0.45),
+        transparent 42%
+      ),
+      linear-gradient(
+        135deg,
+        hsl(345 55% 17%) 0%,
+        hsl(345 48% 25%) 48%,
+        hsl(338 42% 20%) 100%
+      );
+  }
+
+  /*
+    Burgundy → Champagne
+    Premium CTA / featured sections
+  */
+  .bg-gradient-luxury {
+    background:
+      radial-gradient(
+        circle at 15% 20%,
+        hsl(38 70% 78% / 0.18),
+        transparent 35%
+      ),
+      linear-gradient(
+        125deg,
+        hsl(345 52% 22%) 0%,
+        hsl(345 45% 28%) 42%,
+        hsl(25 40% 32%) 70%,
+        hsl(38 58% 48%) 100%
+      );
+  }
+
+  /*
+    Champagne / Cream
+    Elegant light backgrounds
+  */
+  .bg-gradient-cream {
+    background:
+      radial-gradient(
+        circle at 20% 10%,
+        hsl(38 75% 88% / 0.75),
+        transparent 42%
+      ),
+      linear-gradient(
+        135deg,
+        hsl(40 45% 98%) 0%,
+        hsl(38 42% 94%) 50%,
+        hsl(35 35% 89%) 100%
+      );
+  }
+
+  /*
+    Dark Burgundy Glass
+    Useful for cards and navigation
+  */
+  .bg-gradient-obsidian {
+    background:
+      radial-gradient(
+        circle at 80% 10%,
+        hsl(345 55% 38% / 0.15),
+        transparent 38%
+      ),
+      linear-gradient(
+        145deg,
+        hsl(345 38% 11%) 0%,
+        hsl(345 34% 8%) 55%,
+        hsl(340 30% 6%) 100%
+      );
+  }
+
+  /*
+    Soft Burgundy
+    Subtle section backgrounds
+  */
+  .bg-gradient-burgundy-soft {
+    background:
+      linear-gradient(
+        135deg,
+        hsl(345 42% 96%) 0%,
+        hsl(345 34% 93%) 50%,
+        hsl(38 35% 92%) 100%
+      );
+  }
+
+  .dark .bg-gradient-burgundy-soft {
+    background:
+      linear-gradient(
+        135deg,
+        hsl(345 34% 12%) 0%,
+        hsl(345 30% 9%) 55%,
+        hsl(38 18% 10%) 100%
+      );
+  }
+
+  /* =========================================================
+     TEXT GRADIENTS
+     ========================================================= */
+
+  /*
+    Burgundy text gradient
+    Great for headings on light backgrounds
+  */
+  .text-gradient-burgundy {
+    background:
+      linear-gradient(
+        125deg,
+        hsl(345 55% 18%) 0%,
+        hsl(345 48% 28%) 48%,
+        hsl(15 42% 38%) 100%
+      );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /*
+    Champagne text
+    For dark hero sections
+  */
+  .text-gradient-champagne {
+    background:
+      linear-gradient(
+        120deg,
+        hsl(38 62% 88%) 0%,
+        hsl(38 58% 72%) 48%,
+        hsl(25 45% 56%) 100%
+      );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /*
+    Signature brand gradient
+    Burgundy → Rose → Champagne
+  */
+  .text-gradient-luxury {
+    background:
+      linear-gradient(
+        120deg,
+        hsl(345 55% 23%) 0%,
+        hsl(345 48% 34%) 38%,
+        hsl(20 45% 42%) 70%,
+        hsl(38 60% 52%) 100%
+      );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .dark .text-gradient-luxury {
+    background:
+      linear-gradient(
+        120deg,
+        hsl(38 60% 88%) 0%,
+        hsl(38 55% 73%) 38%,
+        hsl(345 48% 64%) 72%,
+        hsl(345 55% 54%) 100%
+      );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* =========================================================
+     CARDS / GLASS
+     ========================================================= */
+
+  .card-gradient-elevated {
+    background:
+      linear-gradient(
+        145deg,
+        hsl(var(--card) / 0.96) 0%,
+        hsl(var(--card) / 0.88) 58%,
+        hsl(38 55% 78% / 0.12) 100%
+      );
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow:
+      0 10px 35px hsl(345 40% 15% / 0.06),
+      inset 0 1px 0 hsl(40 70% 100% / 0.45);
+  }
+
+  .dark .card-gradient-elevated {
+    background:
+      linear-gradient(
+        145deg,
+        hsl(345 35% 13% / 0.92) 0%,
+        hsl(345 32% 9% / 0.88) 60%,
+        hsl(38 45% 35% / 0.10) 100%
+      );
+
+    box-shadow:
+      0 18px 50px hsl(0 0% 0% / 0.28),
+      inset 0 1px 0 hsl(38 60% 80% / 0.08);
+  }
+
+  /* =========================================================
+     LUXURY BORDER
+     ========================================================= */
+
+  .border-gradient-luxury {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(
+        hsl(var(--card)),
+        hsl(var(--card))
+      ) padding-box,
+      linear-gradient(
+        135deg,
+        hsl(345 48% 35% / 0.40),
+        hsl(38 55% 58% / 0.45)
+      ) border-box;
+  }
+
+  /* =========================================================
+     BRAND GLOW
+     ========================================================= */
+
+  .glow-burgundy {
+    box-shadow:
+      0 0 0 1px hsl(345 48% 35% / 0.08),
+      0 12px 45px hsl(345 55% 25% / 0.16);
+  }
+
+  .glow-champagne {
+    box-shadow:
+      0 0 0 1px hsl(38 55% 65% / 0.10),
+      0 12px 45px hsl(38 55% 55% / 0.14);
+  }
+}

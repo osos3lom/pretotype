@@ -1,285 +1,247 @@
-"use client"
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin, { Draggable, DropArg } from '@fullcalendar/interaction'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import { Fragment, useEffect, useState } from 'react'
-import { Dialog, Transition } from '@headlessui/react'
-import { EventSourceInput } from '@fullcalendar/core/index.js'
+'use client';
 
+import React, { useState } from 'react';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import type { EventClickArg } from '@fullcalendar/core';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogFooter, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger 
+} from '@/components/ui/dialog';
+import { Plus } from 'lucide-react';
 
-interface Event {
+interface CalendarEvent {
+  id: string;
   title: string;
-  start: Date | string;
-  allDay: boolean;
-  id: number;
+  start: string;
+  end?: string;
+  allDay?: boolean;
+  backgroundColor?: string;
+  borderColor?: string;
 }
 
-const Calendar = () => {
-  const [events, setEvents] = useState([
-    { title: 'تلقيح', id: '1' },
-    { title: 'تدريب', id: '2' },
-    { title: 'صيانة', id: '3' },
-    { title: 'سفر', id: '4' },
-    { title: 'مسابقة', id: '5' },
-    { title: 'صحة', id: '6' },
-    { title: 'عناية', id: '7' },
-    { title: 'أخرى', id: '8' },
-  ])
-  const [allEvents, setAllEvents] = useState<Event[]>([])
-  const [showModal, setShowModal] = useState(false)
-  const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [idToDelete, setIdToDelete] = useState<number | null>(null)
-  const [newEvent, setNewEvent] = useState<Event>({
+const initialEvents: CalendarEvent[] = [
+  { id: '1', title: 'تدريب قفز حواجز - صقر الجزيرة (الميدان 1)', start: '2026-09-12T09:00:00', end: '2026-09-12T10:30:00', backgroundColor: '#3e1342', borderColor: '#e5b35b' },
+  { id: '2', title: 'كشف بيطري دوري - سفيرة الوادي', start: '2026-09-12T11:00:00', end: '2026-09-12T12:00:00', backgroundColor: '#e5b35b', borderColor: '#3e1342' },
+  { id: '3', title: 'حصة دريساج - كحيلان الشامخ', start: '2026-09-12T16:30:00', end: '2026-09-12T17:30:00', backgroundColor: '#3e1342', borderColor: '#e5b35b' },
+  { id: '4', title: 'تعقيم ونظافة جناح الأفراس (B)', start: '2026-09-13T08:00:00', end: '2026-09-13T10:00:00', backgroundColor: '#4a154b', borderColor: '#e5b35b' },
+  { id: '5', title: 'فحص الحافر وتركيب حذوات - برقان العز', start: '2026-09-14T15:00:00', end: '2026-09-14T16:30:00', backgroundColor: '#e5b35b', borderColor: '#3e1342' },
+  { id: '6', title: 'سباق التحمل التجريبي 10كم', start: '2026-09-15T06:00:00', end: '2026-09-15T09:00:00', backgroundColor: '#3e1342', borderColor: '#e5b35b' },
+];
+
+export default function FursanCalendar() {
+  const [events, setEvents] = useState<CalendarEvent[]>(initialEvents);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+
+  const [newEvent, setNewEvent] = useState({
     title: '',
-    start: '',
-    allDay: false,
-    id: 0
-  })
+    horse: 'صقر الجزيرة',
+    arena: 'الميدان الملكي المغطى',
+    date: '2026-09-12',
+    time: '16:00',
+    type: 'تدريب'
+  });
 
-  useEffect(() => {
-    let draggableEl = document.getElementById('draggable-el')
-    if (draggableEl) {
-      new Draggable(draggableEl, {
-        itemSelector: ".fc-event",
-        eventData: function (eventEl) {
-          let title = eventEl.getAttribute("title")
-          let id = eventEl.getAttribute("data")
-          let start = eventEl.getAttribute("start")
-          return { title, id, start }
-        }
-      })
+  const handleDateClick = (arg: { dateStr: string }) => {
+    setNewEvent((prev) => ({ ...prev, date: arg.dateStr }));
+    setIsAddModalOpen(true);
+  };
+
+  const handleEventClick = (clickInfo: EventClickArg) => {
+    setSelectedEventId(clickInfo.event.id);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCreateEvent = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newEvent.title) return;
+
+    const startDateTime = `${newEvent.date}T${newEvent.time}:00`;
+    const created: CalendarEvent = {
+      id: String(Date.now()),
+      title: `${newEvent.title} - ${newEvent.horse} (${newEvent.arena})`,
+      start: startDateTime,
+      backgroundColor: newEvent.type === 'تدريب' ? '#3e1342' : '#e5b35b',
+      borderColor: '#e5b35b'
+    };
+
+    setEvents([...events, created]);
+    setIsAddModalOpen(false);
+    setNewEvent({ title: '', horse: 'صقر الجزيرة', arena: 'الميدان الملكي المغطى', date: '2026-09-12', time: '16:00', type: 'تدريب' });
+  };
+
+  const handleDeleteEvent = () => {
+    if (selectedEventId) {
+      setEvents(events.filter((e) => e.id !== selectedEventId));
+      setIsDeleteModalOpen(false);
+      setSelectedEventId(null);
     }
-  }, [])
+  };
 
-  function handleDateClick(arg: { date: Date, allDay: boolean }) {
-    setNewEvent({ ...newEvent, start: arg.date, allDay: arg.allDay, id: new Date().getTime() })
-    setShowModal(true)
-  }
-
-  function addEvent(data: DropArg) {
-    const event = { ...newEvent, start: data.date.toISOString(), title: data.draggedEl.innerText, allDay: data.allDay, id: new Date().getTime() }
-    setAllEvents([...allEvents, event])
-  }
-
-  function handleDeleteModal(data: { event: { id: string } }) {
-    setShowDeleteModal(true)
-    setIdToDelete(Number(data.event.id))
-  }
-
-  function handleDelete() {
-    setAllEvents(allEvents.filter(event => Number(event.id) !== Number(idToDelete)))
-    setShowDeleteModal(false)
-    setIdToDelete(null)
-  }
-
-  function handleCloseModal() {
-    setShowModal(false)
-    setNewEvent({
-      title: '',
-      start: '',
-      allDay: false,
-      id: 0
-    })
-    setShowDeleteModal(false)
-    setIdToDelete(null)
-  }
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setNewEvent({
-      ...newEvent,
-      title: e.target.value
-    })
-  }
-
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setAllEvents([...allEvents, newEvent])
-    setShowModal(false)
-    setNewEvent({
-      title: '',
-      start: '',
-      allDay: false,
-      id: 0
-    })
-  }
   return (
-    <div className="flex min-h-screen justify-end items-center p-3">
-        <div className="grid grid-cols-8">
-          <div className="col-span-8">
-            <FullCalendar
-              plugins={[
-                dayGridPlugin,
-                interactionPlugin,
-                timeGridPlugin
-              ]}
-              headerToolbar={{
-                left: 'prev,next today',
-                center: 'title',
-                right: 'resourceTimelineWook, dayGridMonth,timeGridWeek'
-              }}
-              events={allEvents as EventSourceInput}
-              nowIndicator={true}
-              editable={true}
-              droppable={true}
-              selectable={true}
-              selectMirror={true}
-              dateClick={handleDateClick}
-              drop={(data) => addEvent(data)}
-              eventClick={(data) => handleDeleteModal(data)}
-            />
-          </div>
-          <div id="draggable-el" className="grid grid-cols-12 gap-4 ml-3 w-full col-span-8 border-2 p-2 mt-2 rounded-md bg-primary-50">
-            {events.map(event => (
-              <div
-                className="fc-event border-2 p-1 m-2 w-full rounded-md ml-auto text-center bg-secondery"
-                title={event.title}
-                key={event.id}
-              >
-                {event.title}
-              </div>
-            ))}
-            <h1 className="font-bold text-lg text-center">اسحب الموعد</h1>
-            
-          </div>
+    <div className="space-y-6">
+      
+      {/* Top Toolbar */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-card p-4 rounded-2xl border border-border shadow-sm">
+        <div className="flex items-center gap-2">
+          <Badge variant="outline" className="bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30">
+            مواعيد شهر سبتمبر 2026
+          </Badge>
+          <span className="text-xs text-muted-foreground">• اضغط على أي تاريخ لإضافة موعد فوري</span>
         </div>
 
-        <Transition.Root show={showDeleteModal} as={Fragment}>
-          <Dialog as="div" className="relative z-10" onClose={setShowDeleteModal}>
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
+        <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+          <DialogTrigger asChild>
+            <Button size="sm" className="bg-gradient-to-r from-[#3e1342] to-[#5c1c5a] hover:from-[#4e1853] hover:to-[#6d216b] text-white dark:from-[#f5c777] dark:to-[#d69534] dark:text-slate-950 font-bold text-xs rounded-xl h-9 gap-1.5 shadow-md">
+              <Plus className="w-3.5 h-3.5" />
+              حجز موعد / حصة تدريب
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md">
+            <form onSubmit={handleCreateEvent}>
+              <DialogHeader>
+                <DialogTitle className="font-saudi text-xl">جدولة موعد في التقويم</DialogTitle>
+                <DialogDescription className="text-xs text-muted-foreground">
+                  أدخل تفاصيل الحصة أو الكشف البيطري لربطه بجدول الميدان والخيل.
+                </DialogDescription>
+              </DialogHeader>
 
-            >
-              <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-            </Transition.Child>
+              <div className="space-y-3 py-4 text-xs">
+                <div className="space-y-1">
+                  <label className="font-bold text-foreground">عنوان الفعالية / الموعد:</label>
+                  <Input
+                    required
+                    placeholder="مثال: حصة قفز حواجز متقدمة"
+                    value={newEvent.title}
+                    onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+                    className="rounded-xl text-xs"
+                  />
+                </div>
 
-            <div className="fixed inset-0 z-10 overflow-y-auto">
-              <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                <Transition.Child
-                  as={Fragment}
-                  enter="ease-out duration-300"
-                  enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                  enterTo="opacity-100 translate-y-0 sm:scale-100"
-                  leave="ease-in duration-200"
-                  leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                  leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                >
-                  <Dialog.Panel className="relative transform overflow-hidden rounded-lg
-                   bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
-                  >
-                    <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
-                      <div className="sm:flex sm:items-start">
-                        <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center 
-                      justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                          
-                        </div>
-                        <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                          <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
-                            احذف الموعد
-                          </Dialog.Title>
-                          <div className="mt-2">
-                            <p className="text-sm text-gray-500">
-                              هل أنت متأكد من حذف الموعد؟
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                      <button type="button" className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm 
-                      font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto" onClick={handleDelete}>
-                        حذف
-                      </button>
-                      <button type="button" className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 
-                      shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                        onClick={handleCloseModal}
-                      >
-                        إلغاء
-                      </button>
-                    </div>
-                  </Dialog.Panel>
-                </Transition.Child>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="font-bold text-foreground">الخيل المشارك:</label>
+                    <Input
+                      placeholder="صقر الجزيرة"
+                      value={newEvent.horse}
+                      onChange={(e) => setNewEvent({ ...newEvent, horse: e.target.value })}
+                      className="rounded-xl text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-bold text-foreground">نوع الموعد:</label>
+                    <select
+                      value={newEvent.type}
+                      onChange={(e) => setNewEvent({ ...newEvent, type: e.target.value })}
+                      className="w-full h-9 rounded-xl border border-input bg-background px-3 py-1 text-xs focus:ring-2 focus:ring-primary outline-none"
+                    >
+                      <option value="تدريب">تدريب فروسية</option>
+                      <option value="بيطري">كشف ورعاية بيطرية</option>
+                      <option value="صيانة">صيانة الميدان</option>
+                      <option value="بطولة">مسابقة وبطولة</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-bold text-foreground">الميدان / الحلبة:</label>
+                  <Input
+                    placeholder="الميدان الملكي المغطى"
+                    value={newEvent.arena}
+                    onChange={(e) => setNewEvent({ ...newEvent, arena: e.target.value })}
+                    className="rounded-xl text-xs"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1">
+                    <label className="font-bold text-foreground">التاريخ:</label>
+                    <Input
+                      type="date"
+                      value={newEvent.date}
+                      onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
+                      className="rounded-xl text-xs"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="font-bold text-foreground">الوقت:</label>
+                    <Input
+                      type="time"
+                      value={newEvent.time}
+                      onChange={(e) => setNewEvent({ ...newEvent, time: e.target.value })}
+                      className="rounded-xl text-xs"
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </Dialog>
-        </Transition.Root>
-        <Transition.Root show={showModal} as={Fragment}>
-          <Dialog as="div" className="relative z-10" onClose={setShowModal}>
-            <Transition.Child
-              as={Fragment}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
-              <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-            </Transition.Child>
 
-            <div className="fixed inset-0 z-10 overflow-y-auto">
-              <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                <Transition.Child
-                  as={Fragment}
-                  enter="ease-out duration-300"
-                  enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                  enterTo="opacity-100 translate-y-0 sm:scale-100"
-                  leave="ease-in duration-200"
-                  leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                  leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                >
-                  <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                    <div>
-                      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                        
-                      </div>
-                      <div className="mt-3 text-center sm:mt-5">
-                        <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
-                          إضافة موعد
-                        </Dialog.Title>
-                        <form action="submit" onSubmit={handleSubmit}>
-                          <div className="mt-2">
-                            <input type="text" name="title" className="block w-full rounded-md border-0 py-1.5 text-gray-900 
-                            shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 
-                            focus:ring-2 
-                            focus:ring-inset focus:ring-violet-600 
-                            sm:text-sm sm:leading-6"
-                              value={newEvent.title} onChange={(e) => handleChange(e)} placeholder="Title" />
-                          </div>
-                          <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-                            <button
-                              type="submit"
-                              className="inline-flex w-full justify-center rounded-md bg-violet-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-violet-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet-600 sm:col-start-2 disabled:opacity-25"
-                              disabled={newEvent.title === ''}
-                            >
-                              إنشاء
-                            </button>
-                            <button
-                              type="button"
-                              className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0"
-                              onClick={handleCloseModal}
+              <DialogFooter>
+                <Button type="button" variant="outline" size="sm" onClick={() => setIsAddModalOpen(false)} className="rounded-xl text-xs">
+                  إلغاء
+                </Button>
+                <Button type="submit" size="sm" className="bg-gradient-to-r from-[#3e1342] to-[#5c1c5a] text-white dark:from-[#f5c777] dark:to-[#d69534] dark:text-slate-950 font-bold rounded-xl text-xs">
+                  تثبيت الموعد
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </div>
 
-                            >
-                              إلغاء
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </Dialog.Panel>
-                </Transition.Child>
-              </div>
-            </div>
-          </Dialog>
-        </Transition.Root>
+      {/* Main Calendar Viewport */}
+      <Card className="rounded-3xl border-border p-4 sm:p-6 shadow-sm overflow-hidden bg-card">
+        <FullCalendar
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          initialView="dayGridMonth"
+          headerToolbar={{
+            start: 'prev,next today',
+            center: 'title',
+            end: 'dayGridMonth,timeGridWeek,timeGridDay'
+          }}
+          events={events as any}
+          editable={true}
+          selectable={true}
+          dateClick={handleDateClick}
+          eventClick={handleEventClick}
+          height="auto"
+          locale="ar"
+          direction="rtl"
+        />
+      </Card>
+
+      {/* Delete Event Confirmation Modal */}
+      <Dialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-base font-bold text-foreground">حذف الموعد</DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground">
+              هل أنت متأكد من رغبتك في حذف هذا الموعد من التقويم والمزامنة؟
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" size="sm" onClick={() => setIsDeleteModalOpen(false)} className="rounded-xl text-xs">
+              تراجع
+            </Button>
+            <Button variant="destructive" size="sm" onClick={handleDeleteEvent} className="rounded-xl text-xs">
+              حذف الموعد
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
     </div>
   );
-};
-
-export default Calendar;
+}

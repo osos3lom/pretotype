@@ -1,616 +1,410 @@
 'use client';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import Sidebar from '@/components/sidebar'
-import Link from 'next/link'
-import React from 'react'
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import Sidebar from '@/components/sidebar';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogFooter, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogTrigger 
+} from '@/components/ui/dialog';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
+import { 
+  DollarSign, 
+  Plus, 
+  Search, 
+  FileDown, 
+  TrendingUp, 
+  CreditCard, 
+  Receipt, 
+  ArrowUpRight, 
+  ArrowDownRight, 
+  CheckCircle2, 
+  Clock, 
+  AlertCircle, 
+  QrCode, 
+  ShieldCheck, 
+  MoreHorizontal,
+  Wallet
+} from 'lucide-react';
+
+interface Transaction {
+  id: string;
+  invoiceNo: string;
+  client: string;
+  phone: string;
+  service: string;
+  amount: number;
+  vat: number;
+  date: string;
+  method: 'مدى' | 'Apple Pay' | 'تحويل بنكي' | 'كاش';
+  status: 'paid' | 'pending' | 'overdue';
+  statusLabel: string;
+}
+
+const initialTransactions: Transaction[] = [
+  { id: '1', invoiceNo: 'INV-2026-104', client: 'الشيخ فيصل السبيعي', phone: '0501234567', service: 'إيواء بوكس ملكي (A-01) + تدريب', amount: 3500, vat: 525, date: '11 سبتمبر 2026', method: 'مدى', status: 'paid', statusLabel: 'مسدد' },
+  { id: '2', invoiceNo: 'INV-2026-103', client: 'كابتن تركي الرشيد', phone: '0559876543', service: 'باقة تدريب قفز حواجز (12 حصة)', amount: 2400, vat: 360, date: '10 سبتمبر 2026', method: 'Apple Pay', status: 'paid', statusLabel: 'مسدد' },
+  { id: '3', invoiceNo: 'INV-2026-102', client: 'سعود بن ناصر', phone: '0543219876', service: 'عناية بيطرية وفحص دوري شامل', amount: 850, vat: 127.5, date: '08 سبتمبر 2026', method: 'تحويل بنكي', status: 'pending', statusLabel: 'معلق' },
+  { id: '4', invoiceNo: 'INV-2026-101', client: 'خالد المنصور', phone: '0567891234', service: 'إيواء قياسي (B-02) - اشتراك شهري', amount: 2800, vat: 420, date: '05 سبتمبر 2026', method: 'مدى', status: 'paid', statusLabel: 'مسدد' },
+  { id: '5', invoiceNo: 'INV-2026-100', client: 'سلطان القحطاني', phone: '0509871234', service: 'رسوم مشاركة في بطولة قفز الحواجز', amount: 1500, vat: 225, date: '02 سبتمبر 2026', method: 'كاش', status: 'paid', statusLabel: 'مسدد' },
+  { id: '6', invoiceNo: 'INV-2026-099', client: 'فهد الشمري', phone: '0512223344', service: 'إيواء ورعاية طبية مؤقتة (B-02)', amount: 1950, vat: 292.5, date: '28 أغسطس 2026', method: 'تحويل بنكي', status: 'overdue', statusLabel: 'متأخر' },
+  { id: '7', invoiceNo: 'INV-2026-098', client: 'عبدالله الراجحي', phone: '0533344455', service: 'إيواء بوكس ملكي (A-08) - ربع سنوي', amount: 9800, vat: 1470, date: '25 أغسطس 2026', method: 'تحويل بنكي', status: 'paid', statusLabel: 'مسدد' },
+];
 
 export default function FinancePage() {
-  return(
-    <div className="flex min-h-screen w-full flex-col bg-muted/40">
-    <Sidebar/>
-    
-      <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 p-4 md:gap-8 sm:mr-12">
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    
-            <Card >
-              <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-                <DollarSignIcon  />
-                <CardTitle className="text-sm font-medium">إيرادات الشهر</CardTitle>
-                
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl text-center font-bold">SAR45,231.89</div>
-                <p className="text-xs text-muted-foreground">+20.1% من الشهر السابق</p>
-              </CardContent>
-            </Card>
-            <Card x-chunk="dashboard-01-chunk-1">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <UsersIcon />
-                <CardTitle className="text-sm font-medium">الإشتراكات</CardTitle>
-                
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl text-center font-bold">+23</div>
-                <p className="text-xs text-muted-foreground">+180.1% التغير مقارنة بالشهر السابق بنسبة</p>
-              </CardContent>
-            </Card>
-            <Card x-chunk="dashboard-01-chunk-2">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CreditCardIcon  />
-                <CardTitle className="text-sm font-medium">الأرباح</CardTitle>
-                
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl text-center font-bold">+12,234</div>
-                <p className="text-xs text-muted-foreground">+19% التغير مقارنة بالشهر السابق بنسب</p>
-              </CardContent>
-            </Card>
-            <Card x-chunk="dashboard-01-chunk-3">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <ActivityIcon  />
-                <CardTitle className="text-sm font-medium">الرصيد</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl text-center font-bold">SAR369,000</div>
-              </CardContent>
-            </Card>
-          
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
-          
-          <Card>
-            <CardHeader>
-              <CardTitle className='text-center'>اخر المبيعات</CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-8">
-              <div className="flex justify-end gap-4">
-                <div className="mr-auto text-right font-medium">+SAR1,999.00</div>
-                
-                <div className="grid gap-1">
-                  <p className="text-sm text-right font-medium leading-none">أحمد الزول</p>
-                  <p className="text-sm text-muted-foreground">0569456637</p>
-                </div>
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage alt="Avatar" src="/" />
-                  <AvatarFallback>OM</AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="mr-auto font-medium">+SAR39.00</div>
-                <div className="grid gap-1">
-                  <p className="text-sm text-right font-medium leading-none">خالد الفوزان</p>
-                  <p className="text-sm text-muted-foreground">0549857947</p>
-                </div>
-                <Avatar className=" h-9 w-9 sm:flex">
-                  <AvatarImage alt="Avatar" src="/" />
-                  <AvatarFallback>JL</AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="mr-auto font-medium">+SAR39.00</div>
-                <div className="grid gap-1">
-                  <p className="text-sm text-right font-medium leading-none">أم محمد </p>
-                  <p className="text-sm text-muted-foreground">0549857947</p>
-                </div>
-                <Avatar className=" h-9 w-9 sm:flex">
-                  <AvatarImage alt="Avatar" src="/" />
-                  <AvatarFallback>JL</AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="mr-auto font-medium">+SAR39.00</div>
-                <div className="grid gap-1">
-                  <p className="text-sm text-right font-medium leading-none">مصطفى المصري</p>
-                  <p className="text-sm text-muted-foreground">0549857947</p>
-                </div>
-                <Avatar className=" h-9 w-9 sm:flex">
-                  <AvatarImage alt="Avatar" src="/" />
-                  <AvatarFallback>JL</AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="mr-auto font-medium">+$39.00</div>
-              
-                
-                <div className="grid gap-1">
-                  <p className="text-sm text-right font-medium leading-none"> صوفيا ديفس</p>
-                  <p className="text-sm text-muted-foreground">0648393749</p>
-                </div>
-                <Avatar className="hidden h-9 w-9 sm:flex">
-                  <AvatarImage alt="Avatar" src="/" />
-                  <AvatarFallback>SD</AvatarFallback>
-                </Avatar>
-              </div>
-            </CardContent>
-          </Card>
-          <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">
-          <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
-            <CardHeader className="flex flex-row items-center">
-            <Button asChild className="mr-auto gap-1" size="sm">
-                <Link href="#">
-                  عرض الكل
-                  <ArrowUpRightIcon />
-                </Link>
-              </Button>
-              <div className="grid gap-2">
-                <CardTitle className='text-center'>العمليات</CardTitle>
-                <CardDescription>اخر العمليات المالية</CardDescription>
-              </div>
-              
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-left">المبلغ</TableHead>
-                    <TableHead className="text-center ">النوع</TableHead>
-                    <TableHead className="text-center ">التاريخ</TableHead>
-                    <TableHead className=" text-center">الحالة</TableHead>
-                    <TableHead className='text-center'>العميل</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <TableRow>
-                    <TableCell className="text-left">SAR250.00</TableCell>
-                    <TableCell className="text-center">إيجار</TableCell>
-                    <TableCell className="text-center">2023-06-23</TableCell>
-                    <TableCell className="text-center">
-                      <Badge className="text-xs" variant="outline">
-                        مقبولة
-                      </Badge>
-                    </TableCell>    
-                    <TableCell>
-                      <div className="font-medium text-right">حسان البلول</div>
-                      <div className="text-sm text-right text-muted-foreground ">0583729837</div>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="text-left">SAR150.00</TableCell>
-                  
-                    
-                    <TableCell className="text-center">استرجاع</TableCell>
-                    <TableCell className="text-center">2023-06-24</TableCell>
-                    <TableCell className="text-center">
-                      <Badge className="text-xs" variant="outline">
-                        مرفوضة
-                      </Badge>
-                    </TableCell>
-                    
-                    <TableCell>
-                      <div className="font-medium text-right">سوسن المرقاني</div>
-                      <div className="text-sm text-muted-foreground text-right">054683586</div>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="text-left">SAR250.00</TableCell>
-                    <TableCell className="text-center">إيجار</TableCell>
-                    <TableCell className="text-center">2023-06-23</TableCell>
-                    <TableCell className="text-center">
-                      <Badge className="text-xs" variant="outline">
-                        مقبولة
-                      </Badge>
-                    </TableCell>    
-                    <TableCell>
-                      <div className="font-medium text-right">محمد المرداني</div>
-                      <div className="text-sm text-right text-muted-foreground ">0583729837</div>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="text-left">SAR250.00</TableCell>
-                    <TableCell className="text-center">إيجار</TableCell>
-                    <TableCell className="text-center">2023-06-23</TableCell>
-                    <TableCell className="text-center">
-                      <Badge className="text-xs" variant="outline">
-                        مقبولة
-                      </Badge>
-                    </TableCell>    
-                    <TableCell>
-                      <div className="font-medium text-right">خالد بدر</div>
-                      <div className="text-sm text-right text-muted-foreground ">0583729837</div>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="text-left">SAR250.00</TableCell>
-                    <TableCell className="text-center">إيجار</TableCell>
-                    <TableCell className="text-center">2023-06-23</TableCell>
-                    <TableCell className="text-center">
-                      <Badge className="text-xs" variant="outline">
-                        مقبولة
-                      </Badge>
-                    </TableCell>    
-                    <TableCell>
-                      <div className="font-medium text-right">سامي الزول</div>
-                      <div className="text-sm text-right text-muted-foreground ">0583729837</div>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+  const [transactions, setTransactions] = useState<Transaction[]>(initialTransactions);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [isNewInvoiceOpen, setIsNewInvoiceOpen] = useState(false);
+
+  // New Invoice Form State
+  const [newInvoice, setNewInvoice] = useState({
+    client: '',
+    phone: '',
+    service: 'إيواء شهري',
+    amount: '',
+    method: 'مدى' as Transaction['method']
+  });
+
+  const handleCreateInvoice = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newInvoice.client || !newInvoice.amount) return;
+
+    const baseAmount = parseFloat(newInvoice.amount);
+    const vat = baseAmount * 0.15;
+
+    const added: Transaction = {
+      id: String(Date.now()),
+      invoiceNo: `INV-2026-${Math.floor(105 + Math.random() * 900)}`,
+      client: newInvoice.client,
+      phone: newInvoice.phone || '0500000000',
+      service: newInvoice.service,
+      amount: baseAmount,
+      vat: vat,
+      date: 'اليوم، 12 سبتمبر 2026',
+      method: newInvoice.method,
+      status: 'paid',
+      statusLabel: 'مسدد'
+    };
+
+    setTransactions([added, ...transactions]);
+    setIsNewInvoiceOpen(false);
+    setNewInvoice({ client: '', phone: '', service: 'إيواء شهري', amount: '', method: 'مدى' });
+  };
+
+  const filteredTransactions = transactions.filter((t) => {
+    const matchesSearch = 
+      t.invoiceNo.includes(searchQuery) ||
+      t.client.includes(searchQuery) ||
+      t.service.includes(searchQuery);
+
+    if (statusFilter === 'all') return matchesSearch;
+    return matchesSearch && t.status === statusFilter;
+  });
+
+  const totalRevenue = transactions
+    .filter((t) => t.status === 'paid')
+    .reduce((sum, t) => sum + t.amount + t.vat, 0);
+
+  const pendingAmount = transactions
+    .filter((t) => t.status === 'pending' || t.status === 'overdue')
+    .reduce((sum, t) => sum + t.amount + t.vat, 0);
+
+  return (
+    <div className="flex min-h-screen w-full bg-muted/30">
+      <Sidebar />
+
+      {/* Main Workspace Canvas with native RTL right-sidebar offset */}
+      <main className="flex-1 sm:mr-16 lg:mr-20 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
+        
+        {/* Top Header & Actions */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-card p-5 sm:p-6 rounded-2xl sm:rounded-3xl border border-border shadow-sm">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
+              <span className="text-xs font-semibold text-muted-foreground">الفوترة والامتثال المالي • معتمد من هيئة الزكاة والضريبة (ZATCA)</span>
+            </div>
+            <h1 className="font-saudi text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+              الإدارة المالية والفواتير
+            </h1>
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              متابعة عوائد الإيواء، اشتراكات أكاديمية الركوب، وفواتير الخدمات البيطرية اللحظية.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="text-xs rounded-xl font-semibold gap-1.5 h-9"
+              onClick={() => alert('تم تصدير كشف الحساب والتقرير المالي')}
+            >
+              <FileDown className="w-3.5 h-3.5" />
+              تصدير التقرير
+            </Button>
+
+            <Dialog open={isNewInvoiceOpen} onOpenChange={setIsNewInvoiceOpen}>
+              <DialogTrigger asChild>
+                <Button size="sm" className="bg-gradient-to-r from-[#3e1342] to-[#5c1c5a] hover:from-[#4e1853] hover:to-[#6d216b] text-white dark:from-[#f5c777] dark:to-[#d69534] dark:text-slate-950 text-xs rounded-xl font-bold gap-1.5 shadow-md shadow-purple-950/20 dark:shadow-amber-500/20 h-9">
+                  <Plus className="w-3.5 h-3.5" />
+                  إنشاء فاتورة جديدة
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <form onSubmit={handleCreateInvoice}>
+                  <DialogHeader>
+                    <DialogTitle className="font-saudi text-xl">إصدار فاتورة ضريبية مبسطة</DialogTitle>
+                    <DialogDescription className="text-xs text-muted-foreground">
+                      سيتم توليد الفاتورة مع رمز الاستجابة السريعة (QR) متوافقاً مع اشتراطات ZATCA.
+                    </DialogDescription>
+                  </DialogHeader>
+
+                  <div className="space-y-3 py-4 text-xs">
+                    <div className="space-y-1">
+                      <label className="font-bold text-foreground">اسم العميل / المالك:</label>
+                      <Input
+                        required
+                        placeholder="مثال: الشيخ فيصل السبيعي"
+                        value={newInvoice.client}
+                        onChange={(e) => setNewInvoice({ ...newInvoice, client: e.target.value })}
+                        className="rounded-xl text-xs"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="font-bold text-foreground">رقم الجوال للإشعار:</label>
+                      <Input
+                        placeholder="05XXXXXXXX"
+                        value={newInvoice.phone}
+                        onChange={(e) => setNewInvoice({ ...newInvoice, phone: e.target.value })}
+                        className="rounded-xl text-xs font-mono"
+                      />
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="font-bold text-foreground">نوع الخدمة المقدمة:</label>
+                      <select
+                        value={newInvoice.service}
+                        onChange={(e) => setNewInvoice({ ...newInvoice, service: e.target.value })}
+                        className="w-full h-9 rounded-xl border border-input bg-background px-3 py-1 text-xs focus:ring-2 focus:ring-primary outline-none"
+                      >
+                        <option value="إيواء شهري بوكس ملكي">إيواء شهري بوكس ملكي</option>
+                        <option value="إيواء شهري بوكس قياسي">إيواء شهري بوكس قياسي</option>
+                        <option value="باقة تدريب قفز حواجز (12 حصة)">باقة تدريب قفز حواجز (12 حصة)</option>
+                        <option value="كشف وعلاج بيطري">كشف وعلاج بيطري</option>
+                        <option value="رسوم مشاركة في بطولة">رسوم مشاركة في بطولة</option>
+                      </select>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="space-y-1">
+                        <label className="font-bold text-foreground">المبلغ قبل الضريبة (SAR):</label>
+                        <Input
+                          required
+                          type="number"
+                          placeholder="2500"
+                          value={newInvoice.amount}
+                          onChange={(e) => setNewInvoice({ ...newInvoice, amount: e.target.value })}
+                          className="rounded-xl text-xs font-bold"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="font-bold text-foreground">طريقة الدفع:</label>
+                        <select
+                          value={newInvoice.method}
+                          onChange={(e) => setNewInvoice({ ...newInvoice, method: e.target.value as any })}
+                          className="w-full h-9 rounded-xl border border-input bg-background px-3 py-1 text-xs focus:ring-2 focus:ring-primary outline-none"
+                        >
+                          <option value="مدى">مدى (Mada)</option>
+                          <option value="Apple Pay">Apple Pay</option>
+                          <option value="تحويل بنكي">تحويل بنكي</option>
+                          <option value="كاش">كاش / نقدي</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <DialogFooter>
+                    <Button type="button" variant="outline" size="sm" onClick={() => setIsNewInvoiceOpen(false)} className="rounded-xl text-xs">
+                      إلغاء
+                    </Button>
+                    <Button type="submit" size="sm" className="bg-gradient-to-r from-[#3e1342] to-[#5c1c5a] text-white dark:from-[#f5c777] dark:to-[#d69534] dark:text-slate-950 font-bold rounded-xl text-xs">
+                      إصدار وتأكيد الفاتورة
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
+
+        {/* 4 Financial KPI Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <Card className="rounded-2xl border-border shadow-sm">
+            <CardContent className="p-4 space-y-1">
+              <div className="flex justify-between items-center text-xs text-muted-foreground">
+                <span>إجمالي التحصيلات (شامل الضريبة)</span>
+                <span className="text-amber-600 font-bold flex items-center gap-0.5"><ArrowUpRight className="w-3.5 h-3.5" /> +20.4%</span>
+              </div>
+              <div className="text-2xl font-extrabold text-foreground">
+                SAR {totalRevenue.toLocaleString()}
+              </div>
+              <span className="text-[11px] text-muted-foreground block">فواتير مسددة عبر القنوات المعتمدة</span>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-2xl border-border shadow-sm">
+            <CardContent className="p-4 space-y-1">
+              <div className="flex justify-between items-center text-xs text-muted-foreground">
+                <span>عوائد إيواء الخيول والبوكسات</span>
+                <span className="text-emerald-600 font-bold">58% من الدخل</span>
+              </div>
+              <div className="text-2xl font-extrabold text-foreground">
+                SAR 84,000
+              </div>
+              <span className="text-[11px] text-muted-foreground block">42 اشتراك إيواء نشط</span>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-2xl border-border shadow-sm">
+            <CardContent className="p-4 space-y-1">
+              <div className="flex justify-between items-center text-xs text-muted-foreground">
+                <span>مستحقات معلقة وقيد التحصيل</span>
+                <span className="text-amber-600 font-bold">3 فواتير</span>
+              </div>
+              <div className="text-2xl font-extrabold text-foreground">
+                SAR {pendingAmount.toLocaleString()}
+              </div>
+              <span className="text-[11px] text-amber-600 block">تم إرسال تذكيرات الدفع آلياً</span>
+            </CardContent>
+          </Card>
+
+          <Card className="rounded-2xl border-border shadow-sm">
+            <CardContent className="p-4 space-y-1">
+              <div className="flex justify-between items-center text-xs text-muted-foreground">
+                <span>الرصيد المالي المتاح بالخزينة</span>
+                <span className="text-purple-700 dark:text-purple-300 font-bold">حساب الراجحي</span>
+              </div>
+              <div className="text-2xl font-extrabold text-foreground">
+                SAR 369,000
+              </div>
+              <span className="text-[11px] text-muted-foreground block">متاح للصرف والعمليات التشغيلية</span>
+            </CardContent>
+          </Card>
+
+        </div>
+
+        {/* Filter Toolbar: Status Tabs & Search */}
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-card p-3 rounded-2xl border border-border shadow-sm">
+          
+          <div className="relative flex-1 max-w-md">
+            <Search className="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="ابحث برقم الفاتورة، العميل، أو الخدمة..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pr-9 h-9 text-xs rounded-xl bg-background"
+            />
+          </div>
+
+          <Tabs value={statusFilter} onValueChange={setStatusFilter} className="w-auto">
+            <TabsList className="h-9 p-1 rounded-xl bg-muted/60">
+              <TabsTrigger value="all" className="text-xs rounded-lg px-3 py-1">الكل ({transactions.length})</TabsTrigger>
+              <TabsTrigger value="paid" className="text-xs rounded-lg px-3 py-1">مسدد</TabsTrigger>
+              <TabsTrigger value="pending" className="text-xs rounded-lg px-3 py-1">معلق</TabsTrigger>
+              <TabsTrigger value="overdue" className="text-xs rounded-lg px-3 py-1">متأخر</TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+        </div>
+
+        {/* Transactions Table */}
+        <Card className="rounded-2xl border-border overflow-hidden shadow-sm animate-in fade-in duration-300">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader className="bg-muted/40">
+                <TableRow>
+                  <TableHead className="text-right text-xs font-bold">رقم الفاتورة</TableHead>
+                  <TableHead className="text-right text-xs font-bold">العميل</TableHead>
+                  <TableHead className="text-right text-xs font-bold">الخدمة والبيان</TableHead>
+                  <TableHead className="text-right text-xs font-bold">المبلغ الأساسي</TableHead>
+                  <TableHead className="text-right text-xs font-bold">الضريبة (15%)</TableHead>
+                  <TableHead className="text-right text-xs font-bold">الإجمالي</TableHead>
+                  <TableHead className="text-right text-xs font-bold">طريقة الدفع</TableHead>
+                  <TableHead className="text-right text-xs font-bold">الحالة</TableHead>
+                  <TableHead className="text-center text-xs font-bold">إجراءات</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredTransactions.map((t) => (
+                  <TableRow key={t.id} className="hover:bg-muted/30 transition-colors">
+                    <TableCell className="font-mono font-bold text-xs text-foreground">
+                      {t.invoiceNo}
+                    </TableCell>
+                    <TableCell className="text-xs font-bold text-foreground">
+                      <div>{t.client}</div>
+                      <span className="text-[10px] text-muted-foreground font-mono">{t.phone}</span>
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {t.service}
+                    </TableCell>
+                    <TableCell className="text-xs font-mono font-semibold">
+                      SAR {t.amount.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-xs font-mono text-muted-foreground">
+                      SAR {t.vat.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-xs font-mono font-extrabold text-foreground">
+                      SAR {(t.amount + t.vat).toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-xs">
+                      <Badge variant="outline" className="text-[11px] font-medium">
+                        {t.method}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={
+                        t.status === 'paid' ? 'bg-emerald-700 text-white text-[11px]' :
+                        t.status === 'pending' ? 'bg-amber-600 text-white text-[11px]' :
+                        'bg-rose-600 text-white text-[11px]'
+                      }>
+                        {t.statusLabel}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Button size="sm" variant="ghost" className="text-xs h-8 px-2 rounded-lg" onClick={() => alert(`معاينة الفاتورة الإلكترونية ${t.invoiceNo}`)}>
+                        <QrCode className="w-3.5 h-3.5 ml-1 text-amber-600" />
+                        عرض
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </Card>
+
       </main>
     </div>
-  )
-}
-function ActivityIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" />
-    </svg>
-  )
-}
-
-
-function ArrowUpRightIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M7 7h10v10" />
-      <path d="M7 17 17 7" />
-    </svg>
-  )
-}
-
-
-
-function CreditCardIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="20" height="14" x="2" y="5" rx="2" />
-      <line x1="2" x2="22" y1="10" y2="10" />
-    </svg>
-  )
-}
-
-function LineChartIcon() {
-  return (
-    <svg
-      
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3 3v18h18" />
-      <path d="m19 9-5 5-4-4-3 3" />
-    </svg>
-  )
-}
-
-
-function MediaIcon() {
-  return (
-    <svg
-      
-      xmlns="http://www.w3.org/2000/svg"
-      width="30"
-      height="30"
-      viewBox="0 0 60 60"
-      fill="currentColor"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <g transform="translate(0,45) scale(0.100000,-0.100000)">
-      <path d="M320 430 c-14 -11 -32 -20 -40 -20 -24 0 -40 -21 -40 -50 0 -29 16
-      -50 38 -50 8 0 27 -10 44 -21 19 -14 33 -18 39 -12 13 13 7 165 -6 169 -5 2
-      -21 -5 -35 -16z m20 -69 l0 -38 -35 11 c-44 14 -45 38 -2 53 17 5 33 11 35 12
-      1 0 2 -16 2 -38z"/>
-      <path d="M403 360 c0 -39 4 -59 11 -57 19 6 31 55 20 84 -17 49 -31 37 -31
-      -27z"/>
-      <path d="M56 364 c-23 -22 -23 -216 0 -238 21 -22 144 -23 144 -1 0 10 -16 15
-      -62 17 l-63 3 0 100 0 100 73 3 c55 2 72 6 72 17 0 22 -142 21 -164 -1z"/>
-      <path d="M130 245 c0 -32 4 -55 11 -55 17 0 89 44 89 55 0 11 -72 55 -89 55
-      -7 0 -11 -23 -11 -55z"/>
-      <path d="M280 256 c0 -26 4 -36 16 -36 11 0 14 8 12 32 -4 46 -28 49 -28 4z"/>
-      <path d="M232 188 c-16 -16 -16 -120 0 -136 7 -7 43 -12 93 -12 50 0 86 5 93
-      12 16 16 16 120 0 136 -16 16 -170 16 -186 0z m134 -43 c-36 -22 -42 -22 -65
-      -10 -60 33 -58 35 24 35 l80 -1 -39 -24z m-3 -36 l37 23 0 -31 0 -31 -75 0
-      -75 0 0 30 0 31 38 -23 39 -22 36 23z"/>
-      </g>
-    </svg>
-  )
-}
-
-
-function Users2Icon() {
-  return (
-    <svg
-     
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M14 19a6 6 0 0 0-12 0" />
-      <circle cx="8" cy="9" r="4" />
-      <path d="M22 19a6 6 0 0 0-6-6 4 4 0 1 0 0-8" />
-    </svg>
-  )
-}
-
-
-
-function ProgramsIcon() {
-  return (
-    <svg
-      
-      xmlns="http://www.w3.org/2000/svg"
-      width="30"
-      height="30"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-    <g transform="translate(0,25) scale(0.025,-0.025)">
-      <path d="M386 944 c-171 -41 -308 -192 -338 -371 -51 -303 217 -573 521 -526
-      96 15 171 52 242 119 72 69 113 139 134 225 26 113 17 203 -32 306 -21 46 -27
-      53 -39 41 -11 -11 -9 -23 13 -78 37 -87 39 -226 5 -310 -45 -112 -130 -197
-      -242 -242 -43 -17 -75 -22 -150 -22 -75 0 -107 5 -150 22 -112 45 -197 130
-      -242 242 -31 78 -31 222 0 300 62 154 197 253 362 267 79 7 175 -15 240 -55
-      55 -34 63 -66 26 -101 -24 -22 -27 -23 -43 -9 -52 45 -107 63 -193 62 -100 0
-      -161 -24 -225 -89 -65 -65 -89 -125 -89 -225 -1 -78 2 -90 33 -148 38 -70 70
-      -100 145 -140 43 -22 64 -26 136 -26 72 0 93 4 136 26 76 40 107 70 144 140
-      31 56 34 72 35 144 0 65 -5 90 -24 132 -22 47 -26 51 -40 38 -13 -13 -12 -20
-      5 -58 29 -65 26 -169 -8 -233 -65 -124 -198 -180 -333 -141 -110 32 -195 148
-      -195 266 0 118 85 234 195 266 74 21 145 14 214 -20 28 -15 51 -29 51 -33 0
-      -4 -14 -21 -31 -39 l-31 -32 -42 19 c-55 25 -102 24 -156 -3 -132 -67 -132
-      -249 0 -315 101 -52 215 -4 251 104 11 33 8 108 -5 121 -14 13 -30 -21 -30
-      -66 -2 -142 -174 -192 -253 -73 -43 63 -21 148 49 191 46 28 112 25 147 -7 9
-      -7 -63 -73 -80 -73 -39 0 -51 -52 -17 -74 22 -14 51 2 56 30 2 10 58 74 125
-      142 103 103 126 122 152 122 24 0 42 11 79 50 l48 50 -41 0 -41 0 0 42 0 42
-      -39 -38 -39 -38 -54 30 c-103 59 -221 75 -342 46z"/>
-      </g>
-    </svg>
-  )
-}
-function UsersIcon() {
-  return (
-    <svg
-      
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-      <circle cx="9" cy="7" r="4" />
-      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-    </svg>
-  )
-}
-
-
-function DollarSignIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="12" x2="12" y1="2" y2="22" />
-      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-    </svg>
-  )
-}
-
-
-function CalendarDaysIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
-      <line x1="16" x2="16" y1="2" y2="6" />
-      <line x1="8" x2="8" y1="2" y2="6" />
-      <line x1="3" x2="21" y1="10" y2="10" />
-      <path d="M8 14h.01" />
-      <path d="M12 14h.01" />
-      <path d="M16 14h.01" />
-      <path d="M8 18h.01" />
-      <path d="M12 18h.01" />
-      <path d="M16 18h.01" />
-    </svg>
-  )
-}
-
-
-function HorsesIcon() {
-  return (
-    <svg      
-      xmlns="http://www.w3.org/2000/svg"
-      width="40"
-      height="24"
-      viewBox="0 0 100 100"
-      fill="currentColor"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >      
-      <g transform="translate(-20,140)scale(0.140000,-0.150000)">
-        <path d="M390 919 c-24 -5 -67 -20 -96 -34 -56 -27 -84 -31 -116 -14 -18 10
-        -20 9 -14 -7 6 -15 5 -17 -5 -6 -25 23 -27 12 -6 -27 l21 -38 -27 -32 c-23
-        -27 -26 -38 -21 -75 9 -63 -10 -110 -63 -155 -39 -33 -45 -42 -39 -65 5 -19
-        19 -32 49 -45 l42 -18 36 40 c32 36 41 41 99 48 72 8 100 30 100 79 0 31 58
-        90 89 90 34 0 85 -45 113 -99 34 -65 36 -119 8 -216 -12 -39 -23 -110 -25
-        -160 -5 -87 -5 -89 8 -45 26 87 52 126 140 210 196 186 254 247 275 290 24 48
-        18 59 -28 60 -38 1 -101 33 -224 115 -151 100 -221 123 -316 104z m128 -44
-        c29 -9 105 -51 173 -97 67 -44 143 -88 170 -98 27 -9 52 -19 55 -23 12 -11
-        -56 -95 -128 -157 -40 -35 -99 -89 -132 -119 -56 -54 -58 -55 -52 -26 28 123
-        12 203 -55 279 -50 56 -101 74 -152 52 -40 -16 -77 -60 -77 -90 0 -41 -27 -66
-        -72 -66 -48 0 -102 -24 -128 -57 -16 -21 -22 -23 -41 -12 -22 11 -22 12 14 43
-        55 48 70 80 72 150 1 48 6 69 23 91 12 15 22 38 22 51 0 19 5 24 24 24 14 0
-        41 10 61 21 42 25 110 47 146 48 14 1 49 -6 77 -14z"/>
-        </g>
-    </svg>
-  )
-}
-
-function HomeIcon() {
-  return (
-    <svg
-      
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <polyline points="9 22 9 12 15 12 15 22" />
-    </svg>
-  )
-}
-
-
-function StablesIcon() {
-  return (
-    <svg
-      
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="26"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-
-      <g transform="translate(-3,26.5) scale(0.0300000,-0.0300000)">
-      <path d="M305 793 c-105 -81 -193 -152 -197 -157 -4 -6 -8 -116 -8 -244 0
-      -258 6 -289 59 -316 45 -24 637 -24 682 0 54 27 59 57 59 321 l0 238 -191 148
-      c-106 82 -197 151 -203 153 -7 3 -97 -62 -201 -143z m375 -45 l170 -132 0
-      -235 c0 -130 -4 -241 -8 -248 -18 -28 -70 -33 -348 -33 -281 0 -316 4 -336 34
-      -4 6 -8 117 -8 247 l0 235 168 132 c92 72 173 131 180 131 7 1 89 -58 182
-      -131z"/>
-      <path d="M395 654 c-67 -26 -75 -27 -89 -14 -21 17 -60 -5 -50 -28 8 -18 8
-      -27 -2 -109 -5 -42 -12 -58 -36 -78 -41 -35 -36 -73 15 -100 l37 -20 23 27
-      c15 18 36 29 65 33 43 7 72 33 72 67 0 9 9 22 19 28 16 8 24 4 44 -20 37 -44
-      41 -64 22 -139 -21 -86 -17 -174 8 -179 12 -3 17 3 17 19 0 48 42 107 139 197
-      94 87 138 148 128 176 -3 7 -23 16 -44 19 -21 4 -70 27 -108 53 -127 85 -179
-      99 -260 68z m130 -38 c19 -8 61 -33 95 -56 33 -22 79 -49 102 -59 l41 -17 -37
-      -42 c-21 -23 -69 -69 -106 -102 l-67 -59 10 44 c14 61 -3 114 -49 155 -29 25
-      -42 30 -63 25 -36 -9 -50 -23 -59 -58 -7 -25 -15 -32 -55 -42 -26 -7 -56 -20
-      -66 -29 -35 -32 -44 -7 -11 30 23 27 30 44 30 78 0 27 6 48 15 56 8 7 15 21
-      15 31 0 11 6 19 14 19 8 0 33 9 57 20 52 23 88 25 134 6z"/>
-      </g>
-    </svg>
-  )
-}
-
-
-function SettingsIcon() {
-  return (
-    <svg
-      
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
-  )
-}
-
-
-function PanelLeftIcon() {
-  return (
-    <svg
-      
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-      <line x1="9" x2="9" y1="3" y2="21" />
-    </svg>
-  )
+  );
 }
